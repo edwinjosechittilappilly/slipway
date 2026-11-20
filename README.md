@@ -46,6 +46,42 @@ cd ~/code/my-app && slipway init    # Beads + OpenSpec + agent docs for this rep
 slipway ui                          # the Beads board in your browser
 ```
 
+## How you use it
+
+Slipway works in two places. The `slipway` command runs in your **terminal** and sets things up. The skills it
+installs run **inside your agent** (omp, Claude Code, Codex), where you do the actual work.
+
+| Where | You type | When |
+|---|---|---|
+| Terminal | `slipway install`, `update`, `doctor` | New machine, once a week, or when something looks off |
+| Terminal, in a repo | `slipway init` | Once per repo, before the first agent session there |
+| Terminal, in a repo | `slipway ui` | When you want to see the task board |
+| Terminal | `slipway run <role> "…"` | Optional: start the right harness and model for a job without picking them yourself |
+| Inside omp | `/skill:ship-flow`, or just ask "what's next?" | Every working session |
+| Inside Claude Code / Codex | `/ship-flow` / `$ship-flow`, or just ask | Same, if you work there |
+
+You rarely need to name a skill. They are installed with descriptions, so the agent picks them up when your request
+matches ("write a one-pager for X", "draw the architecture", "turn this spec into tickets"). The global rules Slipway
+adds also tell every agent to run `bd prime` and follow the delivery flow on its own.
+
+A typical day:
+
+```bash
+cd ~/code/my-app
+slipway init          # first time in this repo only
+omp                   # start your agent, then type:
+```
+
+```text
+> I want to add SSO login. What's next?               ← ship-flow: grill → one-pager → design → spec → beads
+> Write the one-pager for it.                          ← exec-one-pager
+> Approved. Design doc with a C4 container diagram.    ← design-doc + arch-diagram
+> Propose it as an OpenSpec change, then make beads.   ← openspec-propose + spec-to-beads
+> Work the next ready bead.                            ← bd ready, claim, tdd, review, pr
+```
+
+Meanwhile `slipway ui` in another terminal shows the beads moving from Ready to Closed.
+
 ## What you get
 
 | Pack | Installs | Why |
