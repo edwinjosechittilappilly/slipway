@@ -84,6 +84,8 @@ agree, creates an epic and child beads with dependencies and `role:` labels.
 The agent claims it (`bd update --claim`), builds test-first, reviews, and writes the PR. In another terminal,
 `slipway ui` shows the board change as it goes.
 
+![beads-ui board for the SSO feature: blocked, ready, in progress and closed tickets](assets/beads-board.png)
+
 ## Handing work to another agent
 
 ```bash

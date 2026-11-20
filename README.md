@@ -43,6 +43,11 @@ PR. This is a real answer from omp in a fresh repo:
 
 <p align="center"><img src="docs/assets/whats-next.png" alt="omp answering 'What's next?' for adding SSO login: it states the goal and acceptance check, asks whether Okta means one organisation or many tenants, and lists the next four steps from requirements to OpenSpec change to beads to implementation" width="100%"></p>
 
+Run `slipway ui` and the same feature shows up on the Beads board, with each ticket blocked, ready, in progress or
+done:
+
+<p align="center"><img src="docs/assets/beads-board.png" alt="beads-ui board for the SSO feature: four blocked tasks waiting on the OIDC config, three ready (the epic, a feature flag, audit logging), two in progress, and three closed (the Okta decision, the one-pager, the design doc)" width="100%"></p>
+
 And `slipway doctor` on the same machine, with the fix it suggests for skills that upstream renamed:
 
 <p align="center"><img src="docs/assets/doctor.png" alt="slipway doctor output: every pack installed and pinned, two warnings (old renamed skills and a missing TypeSafe key), and a fix list with the exact commands" width="100%"></p>

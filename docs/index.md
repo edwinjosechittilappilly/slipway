@@ -39,3 +39,5 @@ The preview changes nothing. Drop `--dry-run` to install.
 </div>
 
 ![omp answering "What's next?" for an SSO feature](assets/whats-next.png)
+
+![beads-ui board for the same SSO feature: blocked, ready, in progress and closed tickets](assets/beads-board.png)
