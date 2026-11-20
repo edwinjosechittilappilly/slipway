@@ -65,9 +65,9 @@ removes what it wrote.
 
 ## Documentation
 
-The docs site has a guide (getting started, daily use, ship flow) and the reference (commands, configuration,
-skills, models and harnesses, design, decisions). It will be published at
-<https://edwinjosechittilappilly.github.io/slipway/> once the repo is public; until then, preview it locally:
+The docs site is at **<https://edwinjosechittilappilly.github.io/slipway/>**: a guide (getting started, daily use,
+ship flow) and the reference (commands, configuration, skills, models and harnesses, design, decisions). To preview
+changes locally:
 
 ```bash
 make docs-serve       # http://127.0.0.1:8000/slipway/

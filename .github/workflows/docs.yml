@@ -1,7 +1,7 @@
 name: docs
 
-# Builds the MkDocs site on every PR and push. Deploys to GitHub Pages only while the repository is public:
-# a Pages site is public even for a private repository.
+# Builds the MkDocs site on every PR and push, and deploys pushes to main to GitHub Pages.
+# The Pages site is public even while the repository is private.
 
 on:
   pull_request:
@@ -31,7 +31,7 @@ jobs:
 
   deploy:
     needs: build
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && !github.event.repository.private
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       pages: write

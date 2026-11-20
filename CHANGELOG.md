@@ -8,7 +8,7 @@ All notable changes are recorded here. Format: [Keep a Changelog](https://keepac
 
 - Documentation site (MkDocs Material): home, getting started, daily use, ship flow, commands, plus the existing
   reference pages and ADRs. `make docs` builds it, `make docs-serve` previews it, and the `docs` workflow publishes
-  it to GitHub Pages while the repo is public.
+  it to <https://edwinjosechittilappilly.github.io/slipway/> on every push to `main`.
 - README and docs screenshots of real output: omp answering "what's next?", the Beads board for the same feature,
   and `slipway doctor`.
 
