@@ -6,7 +6,7 @@
 | Owner | Edwin Jose |
 | Reviewers | `reviewer` subagent (plan review, 14 findings, all addressed in v0.1), CI |
 | Executive summary | [one-pager.md](one-pager.md) |
-| Decisions | [adr/](adr/) |
+| Decisions | [adr/](adr/README.md) |
 
 ## 1. Context and scope
 

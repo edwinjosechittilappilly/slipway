@@ -3,10 +3,6 @@
 </p>
 
 <p align="center">
-  <img src="docs/diagrams/architecture.svg" alt="Slipway architecture: the slipway CLI reads slipway.toml and its lock, installs harnesses and tools with Homebrew and npm, installs pinned skills with npx skills into one shared folder, and writes agent config with a 3-way merge" width="100%">
-</p>
-
-<p align="center">
   <a href="https://github.com/edwinjosechittilappilly/slipway/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/edwinjosechittilappilly/slipway/actions/workflows/ci.yml/badge.svg"></a>
   <img alt="Python 3.11+, no dependencies" src="https://img.shields.io/badge/python-3.11%2B%20%C2%B7%20stdlib%20only-3776AB?logo=python&logoColor=white">
   <img alt="Harnesses" src="https://img.shields.io/badge/harnesses-omp%20%C2%B7%20Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Gemini%20%C2%B7%20Cursor-8b5cf6">
@@ -16,211 +12,238 @@
 
 # Slipway
 
-**Dotfiles for AI coding agents.** One command installs, and keeps current, the skills, coding agents, model routing,
-task tracker and spec tooling you work with, across omp, Claude Code, Codex, Gemini and Cursor.
+**Dotfiles for AI coding agents.** Slipway sets up your machine for working with coding agents (omp, Claude Code,
+Codex) and keeps that setup current. One command installs the agents, the skills they use, the model each kind of job
+should run on, a task board agents can claim work from, and a spec tool. Then it gives every agent the same way of
+working: idea → one-pager → design → spec → tickets → code → review → pull request.
 
-[ShipShape](https://github.com/edwinjosechittilappilly/shipshape-stack) makes a repository agent-ready. Slipway makes
-your machine agent-ready.
+## Is this for you?
 
-## 60-second start
+Yes, if you:
+
+- use one or more coding agents every day and have collected skills, plugins and config by hand;
+- want the same rules and skills in every agent, not a different setup per tool;
+- want each job (exploring, planning, coding, reviewing, writing) to use the model that is best at it;
+- want skill updates you can review, not ones that change under you.
+
+It is not an application template (that is [ShipShape](https://github.com/edwinjosechittilappilly/shipshape-stack),
+which makes a *repository* agent-ready), and it does not run agents for you in the background. You still drive the
+agent; Slipway makes sure it has the right tools and habits.
+
+## What changes on your machine
+
+| Before | After `slipway install` |
+|---|---|
+| Skills copied by hand from READMEs; renamed ones keep loading | 30+ skills pinned to a commit, one copy shared by every agent |
+| Each agent has its own rules, or none | One set of working rules in omp, Claude Code, Codex and Gemini |
+| Every job runs on whatever model is active | Exploring, planning, coding and reviewing each go to a chosen model |
+| Tasks live in chat history and TODO comments | A Beads task graph agents claim work from, and a board you can watch |
+| "Let's just start coding" | A one-pager, a design doc with diagrams, and an OpenSpec change before code |
+| Updates happen whenever a tool updates itself | A weekly pull request shows exactly which skill files changed |
+
+Everything Slipway writes is recorded, your own edits are never overwritten, and `slipway uninstall` removes it.
+
+<p align="center">
+  <img src="docs/diagrams/architecture.svg" alt="Slipway architecture: the slipway CLI reads slipway.toml and its lock, installs harnesses and tools with Homebrew and npm, installs pinned skills with npx skills into one shared folder, and writes agent config with a 3-way merge" width="100%">
+</p>
+
+## Install
 
 ```bash
 # 1. Preview: changes nothing, lists every component and command
 curl -fsSL https://raw.githubusercontent.com/edwinjosechittilappilly/slipway/main/install.sh | bash -s -- --dry-run
 
-# 2. Install (omp first; or add `--profile claude-code` / `--profile codex` if that is your harness)
+# 2. Install (omp setup by default; add `--profile claude-code` or `--profile codex` if that is your agent)
 curl -fsSL https://raw.githubusercontent.com/edwinjosechittilappilly/slipway/main/install.sh | bash
 ```
 
-While the repo is private, swap the `curl` URL for your `gh` login:
+While the repo is private, use your `gh` login instead of `curl`:
 `gh api repos/edwinjosechittilappilly/slipway/contents/install.sh -H "Accept: application/vnd.github.raw" | bash`.
 
-The script installs Homebrew, git, gh, Node and uv if missing (and adds Homebrew to your shell profile), clones
-Slipway to `~/.slipway`, installs the `slipway` CLI and runs `slipway install`. It asks for input only for the
-Homebrew password; harness logins are listed at the end. Open a new terminal, then:
-
-```bash
-slipway doctor                      # what is installed, outdated, drifted, or needs a login
-slipway profile new me              # capture your current omp routing as your own profile
-cd ~/code/my-app && slipway init    # Beads + OpenSpec + agent docs for this repo
-slipway ui                          # the Beads board in your browser
-```
+The script installs Homebrew, git, gh, Node and uv if they are missing, clones Slipway to `~/.slipway`, installs the
+`slipway` command and runs `slipway install`. It asks only for your Homebrew password and lists the agent logins you
+still need at the end. Open a new terminal afterwards and run `slipway doctor` to check everything.
 
 ## How you use it
 
-Slipway works in two places. The `slipway` command runs in your **terminal** and sets things up. The skills it
-installs run **inside your agent** (omp, Claude Code, Codex), where you do the actual work.
+You use Slipway in two places:
+
+1. **In your terminal**, the `slipway` command sets things up and keeps them current.
+2. **Inside your agent** (omp, Claude Code, Codex), you work. The skills Slipway installed are already there.
 
 | Where | You type | When |
 |---|---|---|
-| Terminal | `slipway install`, `update`, `doctor` | New machine, once a week, or when something looks off |
+| Terminal | `slipway doctor` | Something looks off, or you want to know what is outdated |
+| Terminal | `slipway update` | About once a week |
 | Terminal, in a repo | `slipway init` | Once per repo, before the first agent session there |
-| Terminal, in a repo | `slipway ui` | When you want to see the task board |
-| Terminal | `slipway run <role> "…"` | Optional: start the right harness and model for a job without picking them yourself |
-| Inside omp | `/skill:ship-flow`, or just ask "what's next?" | Every working session |
-| Inside Claude Code / Codex | `/ship-flow` / `$ship-flow`, or just ask | Same, if you work there |
+| Terminal, in a repo | `slipway ui` | You want to see the task board |
+| Inside omp | Ask "what's next?", or type `/skill:ship-flow` | Every working session |
+| Inside Claude Code / Codex | Ask, or type `/ship-flow` / `$ship-flow` | Same, if you work there |
 
-You rarely need to name a skill. They are installed with descriptions, so the agent picks them up when your request
-matches ("write a one-pager for X", "draw the architecture", "turn this spec into tickets"). The global rules Slipway
-adds also tell every agent to run `bd prime` and follow the delivery flow on its own.
+You rarely need to name a skill. Each one is installed with a description, so the agent uses it when your request
+matches: "write a one-pager for X", "draw the architecture", "turn this spec into tickets".
 
 A typical day:
 
 ```bash
 cd ~/code/my-app
 slipway init          # first time in this repo only
-omp                   # start your agent, then type:
+omp                   # start your agent, then talk to it:
 ```
 
 ```text
-> I want to add SSO login. What's next?               ← ship-flow: grill → one-pager → design → spec → beads
+> I want to add SSO login. What's next?               ← ship-flow sizes the work and picks the first stage
 > Write the one-pager for it.                          ← exec-one-pager
 > Approved. Design doc with a C4 container diagram.    ← design-doc + arch-diagram
 > Propose it as an OpenSpec change, then make beads.   ← openspec-propose + spec-to-beads
 > Work the next ready bead.                            ← bd ready, claim, tdd, review, pr
 ```
 
-Meanwhile `slipway ui` in another terminal shows the beads moving from Ready to Closed.
+In a second terminal, `slipway ui` shows the beads moving from Ready to Closed:
 
-## What you get
+<p align="center"><img src="docs/assets/beads-board.png" alt="beads-ui board with Blocked, Ready, In Progress and Closed columns; an epic and a task in Ready" width="80%"></p>
+
+## Ship flow: the "what's next?" skill
+
+`ship-flow` is the skill that ties everything together. It holds the delivery process, works out which stage you are
+in by looking at the repo, and tells the agent which skill to run and what has to be true before moving on.
+
+It sizes the work first, so small changes skip the paperwork:
+
+| Size | Looks like | Stages |
+|---|---|---|
+| Tiny | Under an hour, one area, nothing public changes | Build → review → ship |
+| Small | One session, behaviour is clear | Quick grill → one bead → build → review → ship |
+| Feature | Several sessions, or behaviour others depend on | All nine stages |
+| Initiative | Needs budget or buy-in | One-pager first, then `wayfinder` to map it, then each feature |
+
+The stages:
+
+| # | Stage | Skill / tool | Done when |
+|---|---|---|---|
+| 1 | Clarify | `grill-with-docs` | Goal and acceptance check fit in one line each |
+| 2 | Decide | `exec-one-pager` | The decision owner said yes |
+| 3 | Design | `design-doc` + `arch-diagram` | Reviewed by a different vendor's model |
+| 4 | Spec | `openspec-propose` | `openspec validate` passes and you approve |
+| 5 | Tickets | `spec-to-beads` | No dependency cycles; every bead has an acceptance check |
+| 6 | Build | `bd ready` → `implement` + `tdd` | The ticket's acceptance check passes |
+| 7 | Review | `code-review`, `deslop`, `impeccable` for UI | No blockers left |
+| 8 | Ship | `pr` skill → `gh pr create` | CI green |
+| 9 | Close | `openspec-archive-change`, `bd close`, `retro` | Specs match what shipped |
+
+How it knows where you are: no one-pager yet → stage 2; one-pager but no design doc → 3; design but no OpenSpec change
+→ 4; change but no beads → 5; `bd ready` returns work → 6; a branch without a PR → 7 and 8.
+
+## What gets installed
 
 | Pack | Installs | Why |
 |---|---|---|
 | `core` | git, gh, Node, uv, jq | Everything else stands on these |
-| `harnesses` | **omp** (primary), Claude Code, Codex | Three vendors: route each job to the model that is best at it, review with a different one |
-| `engineering` | [Matt Pocock's skills](https://github.com/mattpocock/skills): `grill-with-docs`, `to-spec`, `to-tickets`, `tdd`, `diagnosing-bugs`, `code-review`, `handoff`, … (26) | Grill before you build, slice into vertical tickets, test first |
-| `quality` | [humanizer](https://github.com/blader/humanizer) (prose), [deslop](https://github.com/cursor/plugins) (code), [impeccable](https://github.com/pbakaus/impeccable) (UI) | Catch AI slop in what you write, ship and show |
+| `harnesses` | **omp**, Claude Code, Codex | Three vendors: each job on the model best at it, review on a different one |
+| `engineering` | [Matt Pocock's skills](https://github.com/mattpocock/skills) (26): `grill-with-docs`, `to-spec`, `to-tickets`, `tdd`, `diagnosing-bugs`, `code-review`, `handoff`, … | Question the idea, slice vertical tickets, test first |
+| `quality` | [humanizer](https://github.com/blader/humanizer) for prose, [deslop](https://github.com/cursor/plugins) for code, [impeccable](https://github.com/pbakaus/impeccable) for UI | Catch AI slop in what you write, ship and show |
 | `tasks` | [Beads](https://github.com/gastownhall/beads) (`bd`) + [beads-ui](https://github.com/mantoni/beads-ui) | A dependency graph agents claim work from; a board you can watch |
-| `spec` | [OpenSpec](https://github.com/Fission-AI/OpenSpec) | Agree on behaviour before code; native `oh-my-pi`, Claude and Codex support |
-| `docs` | draw.io, pandoc, [drawio-skill](https://github.com/Agents365-ai/drawio-skill) | Diagrams and Word/PDF exports for the people who read your docs |
-| `routing` | Slipway's own skills, global working rules, role agents, omp model roles | The glue: one flow, one set of rules, the right model per job |
-| opt-in | `shipshape`, `jev`, `jev-router`, `office`, `security`, `harnesses-extra`, `parallel`, `factory` | `slipway packs` lists them; [skills catalogue](docs/skills.md) explains each |
+| `spec` | [OpenSpec](https://github.com/Fission-AI/OpenSpec) | Agree on behaviour before code |
+| `docs` | draw.io, pandoc, [drawio-skill](https://github.com/Agents365-ai/drawio-skill) | Diagrams, Word and PDF exports |
+| `routing` | Slipway's own skills, shared working rules, role agents, omp model roles | One flow, one rule set, the right model per job |
+| opt-in | `shipshape`, `jev`, `jev-router`, `office`, `security`, `harnesses-extra`, `parallel`, `factory` | `slipway packs` lists them |
 
 Slipway's own skills:
 
 | Skill | Use it to |
 |---|---|
-| `ship-flow` | Know the next step: idea → one-pager → design → spec → beads → build → review → PR → close |
-| `exec-one-pager` | Get a decision: the ask, quantified problem, options with "do nothing", cost, risks, on one page |
+| `ship-flow` | Know the next step and which skill runs it |
+| `exec-one-pager` | Get a decision: the ask, the problem in numbers, options including "do nothing", cost and risks on one page |
 | `design-doc` | Explain how and why to engineers: Google-style doc with arc42 checks and ADR links |
-| `arch-diagram` | Generate IBM Design Language, C4 or your-brand diagrams as `.drawio` + `.svg` from a JSON spec |
+| `arch-diagram` | Generate IBM-style, C4 or your-brand diagrams as editable `.drawio` and `.svg` |
 | `spec-to-beads` | Turn an approved OpenSpec change into a Beads epic with tickets, dependencies and role labels |
 
-## The delivery flow
-
-```mermaid
-flowchart LR
-  I[Idea] --> G[grill-with-docs]
-  G --> E[exec-one-pager]
-  E --> D[design-doc<br/>arch-diagram]
-  D --> S[OpenSpec change]
-  S --> B[spec-to-beads]
-  B --> R{bd ready}
-  R --> X[implement + tdd]
-  X --> V[review on another vendor<br/>deslop · impeccable]
-  V --> P[PR]
-  P --> C[archive · close · retro]
-```
-
-Ask your agent "what's next?" and `ship-flow` reads the repo (one-pagers, `openspec/changes/`, `bd ready`, the branch)
-to tell you which stage you are in and which skill runs it.
-
-`slipway ui` opens the Beads board for the repo, so you can see what every agent has claimed, what is ready and what
-is blocked:
-
-<p align="center"><img src="docs/assets/beads-board.png" alt="beads-ui board with Blocked, Ready, In Progress and Closed columns; an epic and a task in Ready" width="80%"></p>
-
-## Route each job to the right harness and model
+## The right model for each job
 
 ```text
 $ slipway roles
-  role       harness  model    resolves to                              ready
-  explore    omp      @scout   google-antigravity/gemini-3.8-flash:low  yes
-  plan       omp      @plan    openai-codex/gpt-6.1-sol:high            yes
-  implement  omp      @task    openai-codex/gpt-6.1-terra:auto          yes
-  review     omp      @review  anthropic/claude-opus-5-5:high           yes
-  docs       omp      @draft   anthropic/claude-sonnet-5-5:medium       yes
-  design     claude   opus                                              yes
+  role       harness  model    resolves to
+  explore    omp      @scout   google-antigravity/gemini-3.8-flash:low
+  plan       omp      @plan    openai-codex/gpt-6.1-sol:high
+  implement  omp      @task    openai-codex/gpt-6.1-terra:auto
+  review     omp      @review  anthropic/claude-opus-5-5:high
+  docs       omp      @draft   anthropic/claude-sonnet-5-5:medium
+  design     claude   opus
 ```
 
-- **Inside omp**, roles are omp model roles and task agents (`planner`, `issue-writer`, `pr-author`, `drafter`, plus the
-  bundled `scout`, `task`, `reviewer`), so subagents route themselves. Switch whole setups with
-  `/modelpreset switch frugal|daily|deep`.
-- **Across harnesses**, `slipway run review "check this branch"` launches the mapped harness and model;
-  `slipway run implement --harness codex` sends the same role to another vendor.
-- **From the board**, label a bead `role:review` and run `slipway run --bead <id>`: Slipway claims it atomically and
-  hands it, with its acceptance criteria, to the right harness.
-- **In parallel**, `slipway install --packs parallel` adds Agent Deck; `--packs factory` adds Gas City, which runs
-  formulas over the same Beads graph. See [docs/harnesses.md](docs/harnesses.md).
+- **Inside omp** this happens on its own: omp's subagents (`scout`, `planner`, `task`, `reviewer`, `pr-author`,
+  `drafter`) each use their role's model. Switch whole setups with `/modelpreset switch frugal|daily|deep`.
+- **From the terminal**, `slipway run review "check this branch"` opens the mapped agent and model;
+  `--harness codex` sends the same job to another vendor.
+- **From the board**, label a bead `role:review` and run `slipway run --bead <id>`: Slipway claims it and hands it,
+  with its acceptance criteria, to the right agent.
+- **In parallel**, `--packs parallel` adds Agent Deck and `--packs factory` adds Gas City, which run several agents
+  over the same Beads graph.
 
-## Stay current without surprises
+## Updates you can review
 
-Skills are prompts that run with your permissions, so Slipway treats them like dependencies:
+Skills are prompts that run with your agent's permissions, so Slipway treats them like dependencies:
 
 - `slipway.lock.json` pins every skill source to a commit and every npm tool to a version.
-- A weekly workflow runs `slipway lock --refresh` and opens a PR listing the changed `SKILL.md` files with compare
-  links. You review it like any dependency bump.
-- `slipway update` pulls this repo and moves your machine to the lock. `--latest` skips the lock; `--prune` removes
-  skills Slipway installed that you dropped from the manifest. Older copies that upstream renamed (for example
-  `to-prd` → `to-spec`) are listed by `doctor` with the exact remove command; Slipway never deletes them itself.
-- Your edits win. Slipway remembers what it wrote; if you changed a model role, a managed block or a skill, it keeps
-  your version and `doctor` reports the drift. `--force` overrides.
+- Every Monday a workflow opens a pull request listing the changed `SKILL.md` files, with links to the diffs.
+- `slipway update` pulls the merged lock and moves your machine to it.
+- If you changed a model role, a rules block or a skill, Slipway keeps your version and `doctor` reports the
+  difference. `--force` replaces it, after backing it up.
 
 ## Make it yours
 
-The base manifest is provider-neutral. Your choices live in a profile under `~/.config/slipway/profiles/`, outside the
-checkout, so `slipway update` never conflicts with them:
+Your choices live in a profile in `~/.config/slipway/profiles/`, outside the checkout, so updates never conflict with
+them:
 
 ```bash
 slipway profile new me                       # captures the omp model roles and presets you use today
 slipway profile new me --copy claude-code    # or start from a shipped profile: edwin, claude-code, codex
-slipway install --dry-run                    # see what changes; your profile is already selected
+slipway install --dry-run                    # see what would change
 ```
 
-A profile can enable packs (`enable_packs = ["security"]`), switch off single components
-(`[[component]] id = "codex"` + `enabled = false`), and point roles at other harnesses. Details:
-[docs/configuration.md](docs/configuration.md).
+A profile can add packs (`enable_packs = ["security"]`), switch off single components (`enabled = false`), and point
+roles at other agents. See [configuration](docs/configuration.md).
 
 ## Commands
 
 | Command | What it does |
 |---|---|
 | `slipway install [--profile p] [--packs a,b] [--dry-run]` | Install everything in the selected packs; safe to re-run |
-| `slipway update [--latest] [--prune]` | `git pull`, move components to the lock, refresh the blocks in repos you `init`-ed |
-| `slipway doctor [--json \| --markdown]` | Status, drift, missing logins; `--markdown` is a shareable summary |
+| `slipway update [--latest] [--prune]` | Pull Slipway, move components to the lock, refresh rules in repos you set up |
+| `slipway doctor [--json \| --markdown]` | Installed, outdated, changed by you, missing logins |
 | `slipway profile new <name> [--copy p]` | Create your own profile from your current setup |
-| `slipway packs` | Packs and what each one installs |
-| `slipway init [path] [--stealth]` | Set up a repo: Beads, OpenSpec, `docs/agents/*`, AGENTS.md block |
-| `slipway roles` / `slipway run <role> [prompt]` / `slipway run --bead <id>` | See and use the role → harness → model map |
+| `slipway packs` | List packs and what each installs |
+| `slipway init [path] [--stealth]` | Set up a repo: Beads, OpenSpec, agent docs, AGENTS.md rules |
+| `slipway roles`, `slipway run <role> [prompt]`, `slipway run --bead <id>` | See and use the job → agent → model map |
 | `slipway ui [path]` | Open the Beads board |
-| `slipway lock [--refresh]` | Show pins, or resolve upstream and report changes |
-| `slipway uninstall` | Remove the links, blocks and omp entries Slipway wrote |
+| `slipway lock [--refresh]` | Show pins, or check upstream for changes |
+| `slipway uninstall` | Remove the links, rules blocks and omp settings Slipway wrote |
 
 ## FAQ
 
-**Will it overwrite my config?** No. Before each run it snapshots your agent config files to
-`~/.local/state/slipway/backups/`. It merges omp settings with the 3-way rule, keeps values you changed, never
-replaces a skill installed from another source, and moves anything `--force` replaces into the backup folder.
+**Will it overwrite my config?** No. Before each run it backs up your agent config to
+`~/.local/state/slipway/backups/`. It keeps values you changed, never replaces a skill installed from another
+source, and moves anything `--force` replaces into the backup folder.
 
-**I only use Claude Code (or Codex).** `slipway install --profile claude-code` (or `codex`). Those profiles switch off
-omp and point every role at your harness. Skills land in `~/.agents/skills` (Codex reads it) and are linked into
-`~/.claude/skills`; the working rules go into `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`.
+**I only use Claude Code (or Codex).** Install with `--profile claude-code` (or `codex`). Those profiles switch off
+omp and point every job at your agent.
 
-**Why Beads and not GitHub Issues?** Agents need a dependency graph and atomic claims they can query in
-milliseconds. GitHub stays the public record; `bd github push` mirrors what matters. Backlog.md is the documented
-lighter alternative. See [ADR 0002](docs/adr/0002-beads-for-agent-work.md).
+**Why Beads and not GitHub Issues?** Agents need a dependency graph and safe claiming they can query in
+milliseconds. GitHub stays the public record; `bd github push` mirrors what matters. See
+[ADR 0002](docs/adr/0002-beads-for-agent-work.md).
 
-**Why not chezmoi or rulesync?** They move files. Slipway also pins skill commits, merges omp settings key by key,
-and sets up repos. See [docs/comparison.md](docs/comparison.md).
+**Why not chezmoi or rulesync?** They copy files. Slipway also pins skill versions, merges omp settings key by key,
+and sets up repos. See the [comparison](docs/comparison.md).
 
-**Does it phone home?** Slipway sends nothing. It sets `DISABLE_TELEMETRY=1` and `DO_NOT_TRACK=1` for every `npx`
-call, and `slipway init` runs `bd metrics off` (Beads shares anonymous command counts by default; set
-`beads_metrics = true` under `[project]` to keep them on).
+**Does it phone home?** Slipway sends nothing. It turns off telemetry for every `npx` call, and `slipway init` runs
+`bd metrics off`.
 
-## Docs
+## Documentation
 
-[Executive one-pager](docs/one-pager.md) · [Design doc](docs/design.md) · [Decisions](docs/adr/) ·
-[Skills catalogue](docs/skills.md) · [Harnesses and routing](docs/harnesses.md) ·
-[Configuration](docs/configuration.md) · [Comparison](docs/comparison.md) · [Contributing](CONTRIBUTING.md)
+The full documentation lives in [`docs/`](docs/index.md) and builds into a website with `make docs-serve`:
+[getting started](docs/getting-started.md), [daily use](docs/using.md), [ship flow](docs/ship-flow.md),
+[commands](docs/commands.md), [configuration](docs/configuration.md), [skills](docs/skills.md),
+[harnesses and routing](docs/harnesses.md), [design](docs/design.md), [decisions](docs/adr/README.md).
 
-Licensed under [Apache-2.0](LICENSE). Upstream skills keep their own licences.
+Contributing: [CONTRIBUTING.md](CONTRIBUTING.md). License: [Apache-2.0](LICENSE). Upstream skills keep their own
+licences.

@@ -1,0 +1,90 @@
+site_name: Slipway
+site_description: Dotfiles for AI coding agents. One command installs and updates pinned skills, harnesses, model routing, Beads and OpenSpec.
+site_url: https://edwinjosechittilappilly.github.io/slipway/
+repo_url: https://github.com/edwinjosechittilappilly/slipway
+repo_name: slipway
+edit_uri: edit/main/docs/
+copyright: Copyright &copy; 2026 Edwin Jose Chittilappilly · Apache-2.0
+
+theme:
+  name: material
+  font:
+    text: IBM Plex Sans
+    code: IBM Plex Mono
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+    - toc.follow
+
+extra_css:
+  - assets/site.css
+
+nav:
+  - Home: index.md
+  - Guide:
+      - Getting started: getting-started.md
+      - Daily use: using.md
+      - Ship flow: ship-flow.md
+  - Reference:
+      - Commands: commands.md
+      - Configuration: configuration.md
+      - Skills: skills.md
+      - Harnesses and routing: harnesses.md
+  - Architecture:
+      - One-pager: one-pager.md
+      - Design doc: design.md
+      - Comparison: comparison.md
+      - Decisions:
+          - adr/README.md
+          - adr/0001-manifest-and-python-cli.md
+          - adr/0002-beads-for-agent-work.md
+          - adr/0003-pinned-skills-via-npx-skills.md
+          - adr/0004-omp-first-multi-harness.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+plugins:
+  - search
+
+validation:
+  links:
+    not_found: warn
+    absolute_links: ignore

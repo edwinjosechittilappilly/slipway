@@ -60,4 +60,4 @@ profile from another user.
 
 Remove the 7 stale skills with the command `slipway doctor` prints, add a TypeSafe key so omp's Jev judge features
 turn on, and use
-`ship-flow` on the next feature. Details: [design doc](design.md), [decisions](adr/).
+`ship-flow` on the next feature. Details: [design doc](design.md), [decisions](adr/README.md).

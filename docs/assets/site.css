@@ -1,0 +1,36 @@
+/* Banner palette: harbour ink and signal amber. */
+:root {
+  --md-primary-fg-color: #0e1b24;
+  --md-primary-fg-color--light: #22394a;
+  --md-primary-fg-color--dark: #08121a;
+  --md-accent-fg-color: #c97a12;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #0e1b24;
+  --md-primary-fg-color: #0e1b24;
+  --md-accent-fg-color: #f2a23a;
+  --md-typeset-a-color: #f2a23a;
+}
+
+.md-typeset h1 {
+  font-weight: 600;
+  color: #0e1b24;
+}
+
+[data-md-color-scheme="slate"] .md-typeset h1 {
+  color: #f4efe6;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+::selection {
+  background: #f2a23a55;
+}

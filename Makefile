@@ -7,7 +7,9 @@ PY ?= python3
 export PYTHONPATH := src:tests
 export SLIPWAY_HOME := $(CURDIR)
 
-.PHONY: help install test lint format check smoke diagrams lock
+.PHONY: help install test lint format check smoke diagrams lock docs docs-serve
+
+MKDOCS := uvx --with mkdocs-material mkdocs
 
 help: ## List targets
 	@awk 'BEGIN {FS = ":.*## "} /^[a-z-]+:.*## / {printf "  \033[36mmake %-10s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -41,3 +43,9 @@ diagrams: ## Regenerate docs/diagrams/*.svg and .drawio from their JSON specs
 
 lock: ## Refresh slipway.lock.json from upstream and print the change report
 	$(PY) -m slipway lock --refresh
+
+docs: ## Build the documentation site into site/ (fails on broken nav or config)
+	$(MKDOCS) build --strict
+
+docs-serve: ## Preview the documentation site at http://127.0.0.1:8000
+	$(MKDOCS) serve
