@@ -1,0 +1,64 @@
+# Codex CLI as the main harness, Claude Code kept for review by a second vendor and for UI work.
+# `slipway install --profile codex`, or `slipway profile new me --copy codex` to customise it.
+#
+# Codex reads skills from ~/.agents/skills and rules from ~/.codex/AGENTS.md. Roles use "default", which means the
+# model set in ~/.codex/config.toml; put explicit model ids here if you want per-role models.
+
+[[component]]
+id = "omp"
+enabled = false
+
+[[component]]
+id = "omp-agents"
+enabled = false
+
+[[component]]
+id = "omp-routing"
+enabled = false
+
+[[component]]
+id = "impeccable"
+providers = ["codex", "claude"]
+
+[roles.explore]
+harness = "codex"
+model = "default"
+why = "Codex's configured model."
+
+[roles.plan]
+harness = "codex"
+model = "default"
+why = "Raise reasoning effort in ~/.codex/config.toml for planning sessions."
+
+[roles.implement]
+harness = "codex"
+model = "default"
+why = "Codex as the executor."
+alt = { claude = "sonnet" }
+
+[roles.review]
+harness = "claude"
+model = "opus"
+why = "A different vendor than the implementer catches different mistakes."
+alt = { codex = "default" }
+
+[roles.issues]
+harness = "codex"
+model = "default"
+why = "Structured, cheap."
+
+[roles.pr]
+harness = "codex"
+model = "default"
+why = "PR bodies and commit messages."
+
+[roles.docs]
+harness = "codex"
+model = "default"
+why = "Drafts; humanizer runs after."
+
+[roles.design]
+harness = "claude"
+model = "opus"
+why = "UI work with impeccable."
+alt = { codex = "default" }

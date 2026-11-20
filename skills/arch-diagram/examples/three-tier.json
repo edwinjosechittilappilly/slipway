@@ -1,0 +1,20 @@
+{
+  "title": "Three-tier application",
+  "subtitle": "A simple cloud deployment",
+  "nodes": [
+    {"id": "user", "label": "User", "kind": "actor", "domain": "user", "col": 0, "row": 0},
+    {"id": "web", "label": "Web application", "sublabel": "Browser UI", "domain": "compute", "col": 1, "row": 0},
+    {"id": "api", "label": "API", "sublabel": "Application service", "domain": "compute", "col": 2, "row": 0},
+    {"id": "db", "label": "Database", "kind": "data", "domain": "data", "col": 3, "row": 0},
+    {"id": "idp", "label": "Identity provider", "kind": "external", "domain": "external", "col": 2, "row": 1}
+  ],
+  "groups": [
+    {"id": "cloud", "label": "Cloud", "domain": "network", "children": ["web", "vpc"]},
+    {"id": "vpc", "label": "VPC", "domain": "network", "children": ["api", "db"]}
+  ],
+  "edges": [
+    {"from": "user", "to": "web"}, {"from": "web", "to": "api"},
+    {"from": "api", "to": "db", "label": "Reads / writes"},
+    {"from": "api", "to": "idp", "label": "Authenticates", "style": "dashed"}
+  ]
+}

@@ -1,0 +1,76 @@
+name: upstream-watch
+
+# Weekly: resolve upstream skill commits and tool versions, open a PR with what changed, and do a real install of
+# the lightweight packs on a clean runner so upstream CLI changes surface within a week.
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refresh-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write # dispatch `ci` on the bot branch: PRs opened with GITHUB_TOKEN do not trigger workflows
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Homebrew on PATH (for brew info on taps)
+        run: echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+      - name: Refresh the lock
+        run: SLIPWAY_HOME="$PWD" python3 -m slipway lock --refresh --markdown "$RUNNER_TEMP/body.md"
+      - name: Open or update the PR
+        run: |
+          if git diff --quiet -- slipway.lock.json; then
+            echo "No upstream changes."
+            exit 0
+          fi
+          branch="bot/upstream-pins"
+          git switch -c "$branch"
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -am "chore(lock): bump upstream skill and tool pins"
+          # The bot owns this branch; overwrite it each week from main.
+          git push --force origin "$branch"
+          open=$(gh pr list --head "$branch" --state open --json number --jq length)
+          if [ "$open" -gt 0 ]; then
+            gh pr edit "$branch" --body-file "$RUNNER_TEMP/body.md"
+          else
+            gh pr create --head "$branch" --title "chore(lock): upstream skill and tool updates" \
+              --body-file "$RUNNER_TEMP/body.md"
+          fi
+          gh workflow run ci.yml --ref "$branch"
+
+  real-install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - name: Homebrew on PATH
+        run: echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+      - name: Install the lightweight packs into a clean HOME
+        env:
+          PYTHONPATH: ${{ github.workspace }}/src
+          SLIPWAY_HOME: ${{ github.workspace }}
+        run: |
+          export HOME="$RUNNER_TEMP/home" && mkdir -p "$HOME"
+          python3 -m slipway install --packs core,engineering,quality,tasks,spec,routing
+          python3 -m slipway doctor --packs core,engineering,quality,tasks,spec,routing

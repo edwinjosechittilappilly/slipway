@@ -1,0 +1,27 @@
+[project]
+name = "slipway"
+version = "0.1.0"
+description = "Your agentic development environment as code: one command installs and updates skills, harnesses, model routing, Beads and OpenSpec."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.11"
+authors = [{ name = "Edwin Jose" }]
+keywords = ["ai-agents", "agent-skills", "omp", "claude-code", "codex", "beads", "openspec", "dotfiles"]
+dependencies = []
+
+[project.scripts]
+slipway = "slipway.cli:main"
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/slipway"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]

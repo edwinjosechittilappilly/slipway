@@ -1,0 +1,11 @@
+{
+  "font": "system-ui, sans-serif", "grid": 8, "node_width": 192, "node_height": 64, "radius": 8,
+  "background": "#ffffff", "text": "#161616", "edge": "#525252", "node_fill": "#ffffff", "node_text": "#161616",
+  "domains": {
+    "default": {"primary": "#525252", "light": "#f4f4f4"}, "compute": {"primary": "#525252", "light": "#f4f4f4"},
+    "data": {"primary": "#525252", "light": "#f4f4f4"}, "network": {"primary": "#525252", "light": "#f4f4f4"},
+    "security": {"primary": "#525252", "light": "#f4f4f4"}, "management": {"primary": "#525252", "light": "#f4f4f4"},
+    "ai": {"primary": "#525252", "light": "#f4f4f4"}, "user": {"primary": "#525252", "light": "#f4f4f4"},
+    "external": {"primary": "#525252", "light": "#f4f4f4"}
+  }
+}

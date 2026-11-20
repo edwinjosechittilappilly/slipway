@@ -1,0 +1,25 @@
+# Slipway
+
+> Your agentic development environment as code. One command installs and updates agent skills (pinned by commit),
+> coding agents (omp, Claude Code, Codex, Gemini, Cursor), omp model routing, Beads task tracking and OpenSpec, and
+> sets up repositories for a spec-to-PR delivery flow.
+
+## Start here
+
+- [README](README.md): install, packs, commands, FAQ
+- [Configuration](docs/configuration.md): manifest, profiles, local overlay, lock, state
+- [Design doc](docs/design.md): architecture, ownership rules, risks
+
+## Reference
+
+- [Skills catalogue](docs/skills.md): every skill installed and why
+- [Harnesses and routing](docs/harnesses.md): role → harness → model, multi-harness path, Jev
+- [Decisions](docs/adr/README.md)
+- [Comparison](docs/comparison.md): versus earlier approaches and other tools
+- [Agent rules](config/global-rules.md): the block Slipway writes into each harness's instructions
+
+## Skills shipped here
+
+- [ship-flow](skills/ship-flow/SKILL.md), [exec-one-pager](skills/exec-one-pager/SKILL.md),
+  [design-doc](skills/design-doc/SKILL.md), [arch-diagram](skills/arch-diagram/SKILL.md),
+  [spec-to-beads](skills/spec-to-beads/SKILL.md)

@@ -1,0 +1,32 @@
+{
+  "title": "Slipway",
+  "subtitle": "C4 level 2: how one manifest becomes a working agent environment",
+  "theme": "ibm",
+  "nodes": [
+    {"id": "dev", "label": "Developer", "kind": "actor", "domain": "user", "col": 0, "row": 0},
+    {"id": "cli", "label": "slipway CLI", "sublabel": "install · update · doctor · init", "domain": "compute", "col": 1, "row": 0},
+    {"id": "manifest", "label": "slipway.toml + lock", "sublabel": "packs · pins · roles", "kind": "data", "domain": "data", "col": 1, "row": 1},
+    {"id": "watch", "label": "upstream-watch", "sublabel": "weekly lock-bump PR", "domain": "management", "col": 1, "row": 2},
+    {"id": "pkg", "label": "Homebrew · npm", "sublabel": "pinned versions", "kind": "external", "domain": "external", "col": 2, "row": 0},
+    {"id": "skillscli", "label": "npx skills", "sublabel": "owner/repo@sha", "kind": "external", "domain": "external", "col": 2, "row": 1},
+    {"id": "writer", "label": "Config writer", "sublabel": "links · blocks · omp config", "domain": "management", "col": 2, "row": 2},
+    {"id": "tools", "label": "Harnesses + tools", "sublabel": "omp · claude · codex · bd", "domain": "compute", "col": 3, "row": 0},
+    {"id": "skills", "label": "~/.agents/skills", "sublabel": "one copy for every harness", "kind": "data", "domain": "data", "col": 3, "row": 1},
+    {"id": "config", "label": "Agent config", "sublabel": "model roles · agents · rules", "domain": "ai", "col": 3, "row": 2}
+  ],
+  "groups": [
+    {"id": "repo", "label": "Slipway checkout (git)", "domain": "default", "children": ["cli", "manifest", "watch"]},
+    {"id": "machine", "label": "Your machine", "domain": "default", "children": ["tools", "skills", "config"]}
+  ],
+  "edges": [
+    {"from": "dev", "to": "cli", "label": "one command"},
+    {"from": "cli", "to": "manifest", "label": "reads"},
+    {"from": "cli", "to": "pkg"},
+    {"from": "cli", "to": "skillscli"},
+    {"from": "cli", "to": "writer"},
+    {"from": "watch", "to": "manifest", "label": "bumps pins", "style": "dashed"},
+    {"from": "pkg", "to": "tools", "label": "install"},
+    {"from": "skillscli", "to": "skills", "label": "pinned add"},
+    {"from": "writer", "to": "config", "label": "3-way merge"}
+  ]
+}

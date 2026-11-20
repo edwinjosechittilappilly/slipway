@@ -1,0 +1,71 @@
+# Claude Code as the only harness. `slipway install --profile claude-code`, or
+# `slipway profile new me --copy claude-code` to customise it outside the checkout.
+#
+# Skills still land in ~/.agents/skills and are linked into ~/.claude/skills; the global rules go into
+# ~/.claude/CLAUDE.md. Model names are Claude Code aliases (opus, sonnet, haiku), so they survive model releases.
+
+disable_packs = []
+enable_packs = []
+
+[[component]]
+id = "omp"
+enabled = false
+
+[[component]]
+id = "codex"
+enabled = false
+
+[[component]]
+id = "omp-agents"
+enabled = false
+
+[[component]]
+id = "omp-routing"
+enabled = false
+
+[[component]]
+id = "impeccable"
+providers = ["claude"]
+
+[roles.explore]
+harness = "claude"
+model = "haiku"
+why = "Fast, cheap reads."
+
+[roles.plan]
+harness = "claude"
+model = "opus"
+why = "Strongest reasoning for design and slicing."
+
+[roles.implement]
+harness = "claude"
+model = "sonnet"
+why = "Steady executor for well-specified tickets."
+alt = {}
+
+[roles.review]
+harness = "claude"
+model = "opus"
+why = "A stronger model than the implementer."
+alt = {}
+
+[roles.issues]
+harness = "claude"
+model = "haiku"
+why = "Structured, cheap."
+
+[roles.pr]
+harness = "claude"
+model = "sonnet"
+why = "PR bodies and commit messages."
+
+[roles.docs]
+harness = "claude"
+model = "sonnet"
+why = "One-pagers and design docs; humanizer runs after."
+
+[roles.design]
+harness = "claude"
+model = "opus"
+why = "UI work with impeccable."
+alt = {}

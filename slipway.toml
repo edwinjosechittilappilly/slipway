@@ -1,0 +1,413 @@
+# slipway.toml: your agentic development environment as code.
+#
+# Everything Slipway installs is declared here. Packs group components; `slipway packs` lists them.
+# Personal choices (model ids, extra packs) live in profiles/<name>.toml; machine-only tweaks in
+# ~/.config/slipway/config.toml. Both are overlays on this file (see docs/configuration.md).
+#
+# Component kinds: brew, cask, npm, script, skills, impeccable, claude-plugin, omp-plugin, link, block, omp-config.
+# Every entry says `why`, so the manifest doubles as the catalogue of what you run and the reason for it.
+
+version = 1
+
+[settings]
+# `npx skills -a` targets. `pi` writes the real copy to ~/.agents/skills, which omp, Codex and Pi read;
+# `claude-code` symlinks it into ~/.claude/skills. One copy, every harness.
+skill_agents = ["pi", "claude-code"]
+skills_cli = "skills"
+default_packs = ["core", "harnesses", "engineering", "quality", "tasks", "spec", "docs", "routing"]
+
+[project]
+# `slipway init` settings for repositories.
+openspec_scope = "global"   # "project" commits OpenSpec skills into the repo (better for teams)
+beads_stealth = false       # true keeps .beads/ out of git (personal tracking in shared repos)
+beads_metrics = false      # false runs `bd metrics off` after `bd init` (bd shares anonymous usage data by default)
+
+# ------------------------------------------------------------------ packs
+
+[packs.core]
+description = "Prerequisites: git, gh, Node, uv, jq"
+[packs.harnesses]
+description = "Coding agents: omp (primary), Claude Code, Codex"
+[packs.harnesses-extra]
+description = "More harnesses: Gemini CLI, Cursor CLI, opencode"
+[packs.engineering]
+description = "Matt Pocock's skills: grill, spec, tickets, TDD, diagnose, review, handoff"
+[packs.quality]
+description = "Anti-slop: humanizer for prose, deslop for code, impeccable for UI"
+[packs.tasks]
+description = "Beads dependency-aware issue graph and the beads-ui board"
+[packs.spec]
+description = "OpenSpec: agree on a spec change before code"
+[packs.docs]
+description = "Draw.io diagrams, pandoc export for one-pagers and design docs"
+[packs.routing]
+description = "Your agent setup: Slipway skills, global rules, role agents, omp model roles"
+[packs.shipshape]
+description = "ShipShape skills: repo score, CI triage, integration and Playwright tests"
+[packs.jev]
+description = "TypeSafe Jev (System One) skill for omp/Codex and the Claude Code plugin"
+[packs.jev-router]
+description = "Experimental: oh-my-jev per-prompt router and tool gate for omp"
+[packs.office]
+description = "Anthropic document skills: docx, pptx, pdf"
+[packs.security]
+description = "Trail of Bits review skills: differential review, supply chain, sharp edges"
+[packs.parallel]
+description = "Agent Deck: parallel agent sessions in git worktrees"
+[packs.factory]
+description = "Gas City: multi-agent formulas over Beads (heavy; adopt after Agent Deck)"
+
+# ------------------------------------------------------------------ core
+
+[[component]]
+id = "git"
+pack = "core"
+kind = "brew"
+name = "git"
+why = "Everything else is versioned."
+
+[[component]]
+id = "gh"
+pack = "core"
+kind = "brew"
+name = "gh"
+why = "Issues, PRs, and auth for private skill sources."
+
+[[component]]
+id = "node"
+pack = "core"
+kind = "brew"
+name = "node"
+why = "npx skills, OpenSpec and beads-ui need Node 22+."
+
+[[component]]
+id = "uv"
+pack = "core"
+kind = "brew"
+name = "uv"
+why = "Runs Slipway itself and Python tooling without touching system Python."
+
+[[component]]
+id = "jq"
+pack = "core"
+kind = "brew"
+name = "jq"
+why = "Agents parse --json output from bd, gh and omp with it."
+
+# ------------------------------------------------------------------ harnesses
+
+[[component]]
+id = "omp"
+pack = "harnesses"
+kind = "script"
+bin = "omp"
+install = "curl -fsSL https://omp.sh/install | sh"
+upgrade = "omp update"
+why = "Primary harness: model roles per workload, task agents, Jev judge, fallback chains, ACP."
+
+[[component]]
+id = "claude"
+pack = "harnesses"
+kind = "script"
+bin = "claude"
+install = "curl -fsSL https://claude.ai/install.sh | bash"
+upgrade = "claude update"
+why = "Anthropic-native features and the largest plugin ecosystem; impeccable live mode."
+
+[[component]]
+id = "codex"
+pack = "harnesses"
+kind = "npm"
+name = "@openai/codex"
+bin = "codex"
+why = "GPT-native agent; a second vendor for cross-checking reviews."
+
+[[component]]
+id = "gemini"
+pack = "harnesses-extra"
+kind = "brew"
+name = "gemini-cli"
+bin = "gemini"
+why = "Long-context reads and Google models."
+
+[[component]]
+id = "cursor-agent"
+pack = "harnesses-extra"
+kind = "script"
+bin = "cursor-agent"
+install = "curl -fsS https://cursor.com/install | bash"
+why = "Cursor's agent from the terminal."
+
+[[component]]
+id = "opencode"
+pack = "harnesses-extra"
+kind = "npm"
+name = "opencode-ai"
+bin = "opencode"
+why = "Open multi-provider harness with per-agent models; the closest alternative to omp."
+
+# ------------------------------------------------------------------ engineering
+
+[[component]]
+id = "mattpocock-skills"
+pack = "engineering"
+kind = "skills"
+source = "mattpocock/skills"
+skills = [
+  # engineering
+  "ask-matt", "code-review", "codebase-design", "diagnosing-bugs", "domain-modeling", "grill-with-docs",
+  "implement", "implement-spec", "improve-codebase-architecture", "pr", "prototype", "research", "retro",
+  "setup-matt-pocock-skills", "tdd", "to-spec", "to-tickets", "triage", "wayfinder", "wizard",
+  # productivity
+  "grill-me", "grilling", "handoff", "teach", "wait-what", "writing-for-agents",
+]
+why = "Small composable engineering skills: grill before building, vertical-slice tickets, TDD, diagnosis."
+
+# ------------------------------------------------------------------ quality
+
+[[component]]
+id = "humanizer"
+pack = "quality"
+kind = "skills"
+source = "blader/humanizer"
+skills = ["humanizer"]
+why = "Removes AI tells from prose without changing claims: one-pagers, PR bodies, docs."
+
+[[component]]
+id = "deslop"
+pack = "quality"
+kind = "skills"
+source = "cursor/plugins"
+skills = ["deslop"]
+why = "Strips AI code slop from a branch diff: needless comments, defensive try/catch, any-casts."
+
+[[component]]
+id = "impeccable"
+pack = "quality"
+kind = "impeccable"
+providers = ["omp", "claude", "codex"]
+why = "Design vocabulary plus a deterministic detector for AI-slop UI (npx impeccable detect)."
+
+# ------------------------------------------------------------------ tasks
+
+[[component]]
+id = "beads"
+pack = "tasks"
+kind = "brew"
+name = "beads"
+bin = "bd"
+why = "Dependency-aware issues agents can claim atomically; survives context loss; Gas City-ready."
+
+[[component]]
+id = "beads-ui"
+pack = "tasks"
+kind = "npm"
+name = "beads-ui"
+bin = "bdui"
+why = "Local board, epics and live updates over bd: see and assign agent work."
+
+# ------------------------------------------------------------------ spec
+
+[[component]]
+id = "openspec"
+pack = "spec"
+kind = "npm"
+name = "@fission-ai/openspec"
+bin = "openspec"
+why = "Proposal → specs → design → tasks before code; native oh-my-pi, Claude and Codex support."
+
+# ------------------------------------------------------------------ docs
+
+[[component]]
+id = "drawio-skill"
+pack = "docs"
+kind = "skills"
+source = "Agents365-ai/drawio-skill"
+skills = ["drawio-skill"]
+why = "Edits and exports any draw.io diagram; complements arch-diagram's generated ones."
+
+[[component]]
+id = "drawio"
+pack = "docs"
+kind = "cask"
+name = "drawio"
+check = "test -d /Applications/draw.io.app || command -v drawio"
+platforms = ["darwin"]
+why = "Exports .drawio to PNG/PDF and opens diagrams for hand edits."
+
+[[component]]
+id = "pandoc"
+pack = "docs"
+kind = "brew"
+name = "pandoc"
+why = "One-pager and design doc export to .docx/.pdf for people who live in Word."
+
+# ------------------------------------------------------------------ routing
+
+[[component]]
+id = "own-skills"
+pack = "routing"
+kind = "link"
+dir = "skills"
+targets = ["agents-skills", "claude-skills"]
+why = "ship-flow, exec-one-pager, design-doc, arch-diagram, spec-to-beads: symlinked, so git pull updates them."
+
+[[component]]
+id = "global-rules"
+pack = "routing"
+kind = "block"
+file = "config/global-rules.md"
+targets = ["omp", "claude", "codex", "gemini"]
+why = "The same working rules in every harness's user-level instructions, as a managed block."
+
+[[component]]
+id = "omp-agents"
+pack = "routing"
+kind = "link"
+dir = "agents/omp"
+pattern = "*.md"
+targets = ["omp-agents"]
+why = "Role agents planner, issue-writer, pr-author and drafter, next to omp's bundled scout, task and reviewer."
+
+[[component]]
+id = "claude-agents"
+pack = "routing"
+kind = "link"
+dir = "agents/claude"
+pattern = "*.md"
+targets = ["claude-agents"]
+why = "The same roles as Claude Code subagents with per-role models."
+
+[[component]]
+id = "omp-routing"
+pack = "routing"
+kind = "omp-config"
+why = "Applies [omp] settings (model roles, agent overrides, presets) with the 3-way rule."
+
+# ------------------------------------------------------------------ shipshape
+
+[[component]]
+id = "shipshape-skills"
+pack = "shipshape"
+kind = "skills"
+source = "edwinjosechittilappilly/shipshape-stack"
+skills = ["repo-audit", "ci-triage", "integration-tests", "playwright-tests"]
+why = "Score any repo on 96 checks and plan the PRs that raise it; fix red CI; real-service tests."
+
+# ------------------------------------------------------------------ jev
+
+[[component]]
+id = "typesafe-skill"
+pack = "jev"
+kind = "skills"
+source = "typesafe-ai/skills"
+skills = ["typesafe-ai"]
+agents = ["pi"]
+why = "Design typed judgments with Jev; for omp and Codex (Claude gets the plugin below)."
+
+[[component]]
+id = "typesafe-claude-plugin"
+pack = "jev"
+kind = "claude-plugin"
+marketplace = "typesafe-ai/skills"
+plugin = "typesafe@typesafe-ai"
+why = "Same skill as a self-updating Claude Code plugin."
+
+[[component]]
+id = "oh-my-jev"
+pack = "jev-router"
+kind = "omp-plugin"
+name = "oh-my-jev"
+plugin = "github:apetcu/oh-my-jev"
+why = "Jev tool-call gate and opt-in per-prompt router (OMJ_ROUTER=1). Early project: evaluate before relying on it."
+
+# ------------------------------------------------------------------ office
+
+[[component]]
+id = "anthropic-doc-skills"
+pack = "office"
+kind = "skills"
+source = "anthropics/skills"
+skills = ["docx", "pptx", "pdf"]
+why = "Produce and edit Word, PowerPoint and PDF deliverables (source-available licence)."
+
+# ------------------------------------------------------------------ security
+
+[[component]]
+id = "trailofbits-skills"
+pack = "security"
+kind = "skills"
+source = "trailofbits/skills"
+skills = ["differential-review", "supply-chain-risk-auditor", "sharp-edges", "agentic-actions-auditor", "second-opinion"]
+why = "Security review of diffs, dependencies, GitHub Actions agent risks (CC-BY-SA-4.0)."
+
+# ------------------------------------------------------------------ parallel / factory
+
+[[component]]
+id = "agent-deck"
+pack = "parallel"
+kind = "brew"
+name = "asheshgoplani/tap/agent-deck"
+bin = "agent-deck"
+why = "Run several harness sessions side by side in worktrees, with a TUI."
+
+[[component]]
+id = "gascity"
+pack = "factory"
+kind = "brew"
+name = "gascity"
+bin = "gc"
+why = "Formulas that plan, implement in parallel, review and open PRs over the same Beads graph; has an omp provider."
+
+# ------------------------------------------------------------------ roles
+# `slipway roles` shows this matrix; `slipway run <role>` launches it. Models may be omp role aliases (@plan).
+# An alias the harness cannot resolve, or "default", means that harness's own default model.
+
+[roles.explore]
+harness = "omp"
+model = "@smol"
+why = "Wide, cheap reads; returns compressed context."
+
+[roles.plan]
+harness = "omp"
+model = "@plan"
+why = "Strongest reasoning for design and slicing."
+
+[roles.implement]
+harness = "omp"
+model = "@task"
+why = "Steady executor for well-specified tickets."
+alt = { codex = "default", claude = "sonnet" }
+
+[roles.review]
+harness = "omp"
+model = "@slow"
+why = "A different, stronger model than the implementer catches more."
+alt = { codex = "default", claude = "opus" }
+
+[roles.issues]
+harness = "omp"
+model = "@smol"
+why = "Ticket writing is structured and cheap."
+
+[roles.pr]
+harness = "omp"
+model = "@commit"
+why = "PR titles, bodies and commit messages."
+
+[roles.docs]
+harness = "omp"
+model = "default"
+why = "One-pagers and design docs; humanizer runs after."
+
+[roles.design]
+harness = "claude"
+model = "opus"
+why = "UI work with impeccable; Claude Code supports its live mode."
+alt = { omp = "default" }
+
+# ------------------------------------------------------------------ omp settings
+# Applied by the omp-routing component with the 3-way rule (never overwrites values you changed).
+# The base manifest stays provider-neutral; put model ids in profiles/<name>.toml.
+
+[omp]

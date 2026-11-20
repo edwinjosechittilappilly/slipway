@@ -1,0 +1,65 @@
+# Edwin's profile: overlays slipway.toml. Select it with `slipway install --profile edwin` (remembered afterwards).
+# Make your own outside the checkout: `slipway profile new <you>` (captures your omp setup) or `--copy edwin`.
+
+enable_packs = ["shipshape", "jev"]
+
+# ------------------------------------------------------------------ omp routing
+# Model ids as they appear in `omp models`. Thinking suffixes: :low :medium :high :xhigh :max :auto.
+
+[omp]
+defaultThinkingLevel = "auto"
+
+[omp.modelRoles]
+plan = "openai-codex/gpt-6.1-sol:high"       # architecture, slicing, hard reasoning
+slow = "openai-codex/gpt-6.1-sol:high"
+task = "openai-codex/gpt-6.1-terra:auto"     # implementation subagents
+review = "anthropic/claude-opus-5-5:high"    # other vendor than the implementer
+draft = "anthropic/claude-sonnet-5-5:medium" # prose: docs, PR bodies, one-pagers
+smol = "openai-codex/gpt-6-luna:low"
+scout = "google-antigravity/gemini-3.8-flash:low"  # exploration: fast, long context
+commit = "openai-codex/gpt-6-luna:medium"
+tiny = "openai-codex/gpt-6-luna:low"
+memory = "openai-codex/gpt-6-luna:low"
+advisor = "anthropic/claude-opus-5-5:high"
+
+[omp."task.agentModelOverrides"]
+task = "@task"
+reviewer = "@review"
+security-reviewer = "@review"
+scout = "@scout"
+sonic = "@smol"
+drafter = "@draft"
+planner = "@plan"
+issue-writer = "@smol"
+pr-author = "@commit"
+
+# Switch with /modelpreset switch <name> inside omp.
+[omp.modelPresets.daily]
+defaultThinkingLevel = "auto"
+modelRoles = { plan = "openai-codex/gpt-6.1-sol:high", slow = "openai-codex/gpt-6.1-sol:high", task = "openai-codex/gpt-6.1-terra:auto", review = "anthropic/claude-opus-5-5:high", draft = "anthropic/claude-sonnet-5-5:medium", smol = "openai-codex/gpt-6-luna:low", scout = "google-antigravity/gemini-3.8-flash:low", commit = "openai-codex/gpt-6-luna:medium", advisor = "anthropic/claude-opus-5-5:high" }
+
+[omp.modelPresets.frugal]
+defaultThinkingLevel = "low"
+modelRoles = { plan = "openai-codex/gpt-6.1-terra:high", slow = "openai-codex/gpt-6.1-terra:high", task = "openai-codex/gpt-6-luna:medium", review = "anthropic/claude-sonnet-5-5:high", draft = "openai-codex/gpt-6-luna:medium", smol = "openai-codex/gpt-6-luna:low", scout = "google-antigravity/gemini-3.8-flash:low", commit = "openai-codex/gpt-6-luna:low", advisor = "anthropic/claude-sonnet-5-5:medium" }
+
+[omp.modelPresets.deep]
+defaultThinkingLevel = "high"
+modelRoles = { plan = "openai-codex/gpt-6.1-sol:xhigh", slow = "openai-codex/gpt-6.1-sol:xhigh", task = "openai-codex/gpt-6.1-sol:high", review = "anthropic/claude-opus-5-5:xhigh", draft = "anthropic/claude-opus-5-5:medium", smol = "openai-codex/gpt-6-luna:medium", scout = "google-antigravity/gemini-3.8-flash:medium", commit = "openai-codex/gpt-6-luna:medium", advisor = "anthropic/claude-opus-5-5:xhigh" }
+
+# ------------------------------------------------------------------ roles across harnesses
+
+[roles.explore]
+harness = "omp"
+model = "@scout"
+why = "Gemini Flash: fast, long context, cheap."
+
+[roles.review]
+harness = "omp"
+model = "@review"
+why = "Opus reviews what GPT implemented: a different vendor catches different mistakes."
+alt = { codex = "default", claude = "opus" }
+
+[roles.docs]
+harness = "omp"
+model = "@draft"
+why = "Sonnet drafts; humanizer cleans."

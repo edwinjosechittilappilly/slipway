@@ -1,0 +1,15 @@
+{
+  "font": "IBM Plex Sans, Arial, sans-serif", "grid": 8, "node_width": 192, "node_height": 64, "radius": 8,
+  "background": "#ffffff", "text": "#161616", "edge": "#525252", "node_fill": "#ffffff", "node_text": "#161616",
+  "domains": {
+    "default": {"primary": "#525252", "light": "#f4f4f4"},
+    "compute": {"primary": "#1192e8", "light": "#e5f6ff"},
+    "data": {"primary": "#0f62fe", "light": "#edf5ff"},
+    "network": {"primary": "#24a148", "light": "#defbe6"},
+    "security": {"primary": "#fa4d56", "light": "#fff1f1"},
+    "management": {"primary": "#009d9a", "light": "#d9fbfb"},
+    "ai": {"primary": "#8a3ffc", "light": "#f6f2ff"},
+    "user": {"primary": "#d02670", "light": "#fff0f7"},
+    "external": {"primary": "#8d8d8d", "light": "#ffffff"}
+  }
+}

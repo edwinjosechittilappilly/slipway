@@ -1,0 +1,13 @@
+{
+  "font": "Arial, sans-serif", "grid": 8, "node_width": 192, "node_height": 64, "radius": 8,
+  "background": "#ffffff", "text": "#161616", "edge": "#525252", "node_fill": "#85bbf0", "node_text": "#ffffff",
+  "kind_fills": {"actor": "#08427b", "component": "#85bbf0", "external": "#999999", "data": "#1168bd", "queue": "#438dd5"},
+  "show_kind": true,
+  "domains": {
+    "default": {"primary": "#1168bd", "light": "#e8f1fa"}, "compute": {"primary": "#1168bd", "light": "#e8f1fa"},
+    "data": {"primary": "#1168bd", "light": "#e8f1fa"}, "network": {"primary": "#438dd5", "light": "#edf5fc"},
+    "security": {"primary": "#1168bd", "light": "#e8f1fa"}, "management": {"primary": "#438dd5", "light": "#edf5fc"},
+    "ai": {"primary": "#1168bd", "light": "#e8f1fa"}, "user": {"primary": "#08427b", "light": "#e8f1fa"},
+    "external": {"primary": "#999999", "light": "#f4f4f4"}
+  }
+}
