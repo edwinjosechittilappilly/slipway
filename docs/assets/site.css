@@ -13,6 +13,38 @@
   --md-typeset-a-color: #f2a23a;
 }
 
+/* Full-width layout: use the whole window, keep side margins. */
+.md-grid {
+  max-width: none;
+  margin-inline: clamp(1rem, 3vw, 3rem);
+}
+
+/* Readable line length for prose; tables, code and images use the full width. */
+.md-typeset > p:not(:has(img)),
+.md-typeset > ul,
+.md-typeset > ol {
+  max-width: 80ch;
+}
+
+.md-typeset__table,
+.md-typeset__scrollwrap {
+  width: 100%;
+}
+.md-typeset table:not([class]) {
+  display: table;
+  width: 100%;
+}
+
+/* Copy buttons are always visible (not hover-only), and long commands never run under them. */
+.md-clipboard,
+.md-code__button {
+  opacity: 1 !important;
+  color: #f2a23a;
+}
+.md-typeset pre > code {
+  padding-right: 3.2rem;
+}
+
 .md-typeset h1 {
   font-weight: 600;
   color: #0e1b24;

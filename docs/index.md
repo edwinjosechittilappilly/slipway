@@ -2,6 +2,7 @@
 title: Slipway
 hide:
   - navigation
+  - toc
 ---
 
 ![Slipway: your AI coding setup, launched in one command](assets/banner.svg)
