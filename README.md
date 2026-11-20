@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="docs/assets/banner.svg" alt="Slipway: your AI coding setup, launched in one command. Pinned skills with reviewed updates; omp, Claude Code and Codex; the right model for every role; Beads board and OpenSpec; one-pager to design doc to PR; IBM-style architecture diagrams." width="100%">
+</p>
+
+<p align="center">
   <img src="docs/diagrams/architecture.svg" alt="Slipway architecture: the slipway CLI reads slipway.toml and its lock, installs harnesses and tools with Homebrew and npm, installs pinned skills with npx skills into one shared folder, and writes agent config with a 3-way merge" width="100%">
 </p>
 
