@@ -4,6 +4,19 @@ All notable changes are recorded here. Format: [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Added
+
+- Documentation site (MkDocs Material): home, getting started, daily use, ship flow, commands, plus the existing
+  reference pages and ADRs. `make docs` builds it, `make docs-serve` previews it, and the `docs` workflow publishes
+  it to <https://edwinjosechittilappilly.github.io/slipway/> on every push to `main`.
+- README and docs screenshots of real output: omp answering "what's next?", the Beads board for the same feature,
+  and `slipway doctor`.
+
+### Changed
+
+- README cut from 226 to about 80 lines; detailed tables moved to the docs site.
+- Docs site uses the full window width and always shows the copy button on code blocks.
+
 ## [0.1.0] - 2026-11-20
 
 ### Added
