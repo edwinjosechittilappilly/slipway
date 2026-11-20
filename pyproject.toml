@@ -1,7 +1,7 @@
 [project]
 name = "slipway"
 version = "0.1.0"
-description = "Your agentic development environment as code: one command installs and updates skills, harnesses, model routing, Beads and OpenSpec."
+description = "Dotfiles for AI coding agents: one command installs and updates pinned skills, harnesses, model routing, Beads and OpenSpec."
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.11"

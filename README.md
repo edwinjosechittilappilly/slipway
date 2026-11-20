@@ -16,8 +16,8 @@
 
 # Slipway
 
-**Your agentic development environment as code.** One command installs, and keeps current, the skills, coding
-agents, model routing, task tracker and spec tooling you work with, across omp, Claude Code, Codex, Gemini and Cursor.
+**Dotfiles for AI coding agents.** One command installs, and keeps current, the skills, coding agents, model routing,
+task tracker and spec tooling you work with, across omp, Claude Code, Codex, Gemini and Cursor.
 
 [ShipShape](https://github.com/edwinjosechittilappilly/shipshape-stack) makes a repository agent-ready. Slipway makes
 your machine agent-ready.
