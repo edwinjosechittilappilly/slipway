@@ -136,13 +136,20 @@ def _refresh_projects(ctx: Ctx) -> None:
     ui.heading("projects")
     for path_str in sorted(projects):
         target = Path(path_str)
+        if not target.is_dir():
+            ui.status("skipped", paths.contract(target), "repo is gone; forgotten")
+            if not ctx.runner.dry_run:
+                del projects[path_str]
+            continue
         if not (target / "AGENTS.md").exists():
-            ui.status("skipped", paths.contract(target), "no AGENTS.md (moved or deleted?)")
+            ui.status("skipped", paths.contract(target), "no AGENTS.md (run slipway init there again)")
             continue
         actions = project.refresh_blocks(ctx.manifest, target, force=ctx.force, dry_run=ctx.runner.dry_run)
         changed = {k: v for k, v in actions.items() if v not in ("unchanged", "imports")}
         state = "drift" if "edited" in changed.values() else "ok"
         ui.status(state, paths.contract(target), ", ".join(f"{k} {v}" for k, v in changed.items()) or "up to date")
+    if not ctx.runner.dry_run:
+        ctx.state.save()
 
 
 def cmd_doctor(args: argparse.Namespace) -> int:

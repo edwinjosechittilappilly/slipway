@@ -89,7 +89,7 @@ def environment_checks(ctx: Ctx) -> list[Check]:
             "slipway update --prune, or delete the broken links",
         )
     )
-    projects = [Path(p) for p in ctx.state.section("projects")]
+    projects = [Path(p) for p in ctx.state.section("projects") if Path(p).is_dir()]
     if projects:
         block = project.agents_block(ctx.manifest)
         behind = [
