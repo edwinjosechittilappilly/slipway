@@ -35,6 +35,7 @@ slipway doctor        # once in a while: what is installed, outdated, or needs a
 cd ~/code/my-app
 slipway init          # once per repo: task board, specs, agent rules
 omp                   # then just talk to it
+slipway ui            # in a second terminal: the task board in your browser
 ```
 
 Ask "what's next?" and the `ship-flow` skill reads the repo and picks the stage: question the idea, write a one-pager,
@@ -64,11 +65,18 @@ removes what it wrote.
 
 ## Documentation
 
-Run `make docs-serve` for the docs site, or read the pages directly:
-[getting started](docs/getting-started.md), [daily use](docs/using.md), [ship flow](docs/ship-flow.md),
-[commands](docs/commands.md), [configuration](docs/configuration.md), [skills](docs/skills.md),
-[models and harnesses](docs/harnesses.md), [design](docs/design.md), [decisions](docs/adr/README.md),
-[comparison with other tools](docs/comparison.md).
+The docs site has a guide (getting started, daily use, ship flow) and the reference (commands, configuration,
+skills, models and harnesses, design, decisions). It will be published at
+<https://edwinjosechittilappilly.github.io/slipway/> once the repo is public; until then, preview it locally:
+
+```bash
+make docs-serve       # http://127.0.0.1:8000/slipway/
+```
+
+Or read the pages on GitHub: [getting started](docs/getting-started.md), [daily use](docs/using.md),
+[ship flow](docs/ship-flow.md), [commands](docs/commands.md), [configuration](docs/configuration.md),
+[skills](docs/skills.md), [models and harnesses](docs/harnesses.md), [design](docs/design.md),
+[decisions](docs/adr/README.md), [comparison with other tools](docs/comparison.md).
 
 [ShipShape](https://github.com/edwinjosechittilappilly/shipshape-stack) makes a repository agent-ready; Slipway does the
 same for your machine. Apache-2.0; upstream skills keep their own licences.
