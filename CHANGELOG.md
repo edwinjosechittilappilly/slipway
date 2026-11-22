@@ -15,7 +15,8 @@ All notable changes are recorded here. Format: [Keep a Changelog](https://keepac
 
 ### Changed
 
-- Global rules and delivery skills track review findings and close beads only after merge.
+- Global rules and delivery skills track review findings; code-changing beads close after merge, decisions, spikes
+  and research on acceptance.
 - README cut from 226 to about 80 lines; detailed tables moved to the docs site.
 - Docs site uses the full window width and always shows the copy button on code blocks.
 

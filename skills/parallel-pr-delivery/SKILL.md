@@ -66,6 +66,13 @@ description: Deliver independent Beads slices in parallel worktrees through PR r
    gh api graphql -f id="$THREAD" -f query='
    mutation($id:ID!) { resolveReviewThread(input:{threadId:$id}) { thread { isResolved } } }'
    ```
+   When the reviewer signs off, record the reviewed head. If the head changes, repeat affected review and record the
+   new reviewed head before merging.
+
+   ```bash
+   REVIEWED_SHA=$(gh pr view "$PR" --json headRefOid -q .headRefOid)
+   ```
+
 
 5. **Gate and merge.** Required CI must pass and the PR branch must be current. If behind, update with a merge
    commit after review starts to preserve cited SHAs, pull it locally, then re-run checks and affected review.
@@ -75,8 +82,8 @@ description: Deliver independent Beads slices in parallel worktrees through PR r
    or destructive operations and rehearse them on a copy.
 
    Once findings and threads are addressed, non-UI PRs may use auto-merge. If it is disabled, wait for required
-   checks, set `SHA` to the reviewed PR head and merge with `--match-head-commit`. UI PRs merge only after the
-   visual gate; respect all branch protections.
+   checks and merge only the signed-off `REVIEWED_SHA`. UI PRs merge only after the visual gate; respect all branch
+   protections.
 
    ```bash
    gh pr update-branch "$PR"  # only if behind
@@ -84,13 +91,9 @@ description: Deliver independent Beads slices in parallel worktrees through PR r
    gh pr checks "$PR" --watch --required
    gh pr merge "$PR" --squash --auto  # non-UI, after findings are addressed
    # If auto-merge is disabled, after all gates pass:
-   SHA=$(gh pr view "$PR" --json headRefOid -q .headRefOid)
-   gh pr merge "$PR" --squash --match-head-commit "$SHA"
+   gh pr merge "$PR" --squash --match-head-commit "$REVIEWED_SHA"
    ```
 
-   For npm releases, use tag-triggered GitHub Actions trusted publishing with `permissions: id-token: write`;
-   skip already-published versions, keep long-lived `NPM_TOKEN` out of the workflow, and obtain owner approval for
-   staged publishes. Check the repository's public status when assessing Actions billing.
 
 6. **Close and clean up.** Confirm GitHub reports the PR merged before closing its finding, review and code-changing
    slice beads, citing the PR and merge commit; cite the follow-up id for deferred findings. Close a parent only
@@ -101,7 +104,7 @@ description: Deliver independent Beads slices in parallel worktrees through PR r
    MERGE_COMMIT=$(gh pr view "$PR" --json state,mergeCommit \
      -q 'select(.state=="MERGED").mergeCommit.oid')
    test -n "$MERGE_COMMIT" || { echo "PR is not merged" >&2; exit 1; }
-   for f in $(bd list --parent "$REVIEW" --status open,in_progress,blocked,deferred --json | jq -r '.[].id'); do
+   for f in $(bd list --parent "$REVIEW" --status open,in_progress,blocked,deferred --limit 0 --json | jq -r '.[].id'); do
      bd close "$f" --reason "Merged in $PR_URL ($MERGE_COMMIT); see notes for any follow-up"
    done
    bd close "$REVIEW" --reason "Merged in $PR_URL ($MERGE_COMMIT)"
@@ -109,3 +112,14 @@ description: Deliver independent Beads slices in parallel worktrees through PR r
    git worktree remove "../worktrees/$BEAD"
    git branch -D "feat/$BEAD"
    ```
+
+## Without Beads
+
+Apply the same review, thread, CI, UI and migration gates without the `bd` commands or bead-specific steps. List
+findings and accepted follow-ups in the PR thread; use branches or worktrees as appropriate for the slices.
+
+## Releases
+
+For npm releases, publish from a tag-triggered GitHub Actions job using trusted publishing: configure the trusted
+publisher on npmjs.com, use npm 11.5.1 or newer and grant `permissions: id-token: write`. Store no `NPM_TOKEN`; skip
+versions already on the registry. Obtain owner approval before staged publishes.
