@@ -56,8 +56,8 @@ And `slipway doctor` on the same machine, with the fix it suggests for skills th
 ## What it installs
 
 Matt Pocock's engineering skills, anti-slop checks for prose (humanizer), code (deslop) and UI (impeccable), Beads with
-its board, OpenSpec, draw.io, and five skills of its own: `ship-flow`, `exec-one-pager`, `design-doc`,
-`arch-diagram` (IBM, C4 or your brand style) and `spec-to-beads`. Extra packs add ShipShape, TypeSafe Jev, security
+its board, OpenSpec, draw.io, and six skills of its own: `ship-flow`, `parallel-pr-delivery`, `exec-one-pager`,
+`design-doc`, `arch-diagram` (IBM, C4 or your brand style) and `spec-to-beads`. Extra packs add ShipShape, TypeSafe Jev, security
 review, Agent Deck and Gas City. `slipway packs` lists everything.
 
 Your config stays yours. Slipway backs it up before each run, keeps any value you changed, and `slipway uninstall`

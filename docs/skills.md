@@ -55,11 +55,12 @@ Impeccable uses its own global installer, not the `skills` source pin mechanism.
 
 ## Routing
 
-These five are maintained in this repository (`skills/<name>/SKILL.md`) and linked from the checkout, not downloaded from an `owner/repo` skills source. The model may select them from their descriptions; users may request them directly.
+These six are maintained in this repository (`skills/<name>/SKILL.md`) and linked from the checkout, not downloaded from an `owner/repo` skills source. The model may select them from their descriptions; users may request them directly.
 
 | Skill | Source | Invoked by | When to use it |
 |---|---|---|---|
 | `ship-flow` | Slipway local | User / model | Navigate idea, spec, implementation, review and closeout. |
+| `parallel-pr-delivery` | Slipway local | User / model | Coordinate worktrees, independent PR review, merge gates and cleanup. |
 | `exec-one-pager` | Slipway local | User / model | Prepare a decision brief for a stakeholder. |
 | `design-doc` | Slipway local | User / model | Write a technical design with alternatives and cross-cutting concerns. |
 | `arch-diagram` | Slipway local | User / model | Generate an editable architecture diagram and SVG. |

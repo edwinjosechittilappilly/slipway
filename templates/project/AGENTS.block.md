@@ -1,7 +1,8 @@
 ## Delivery workflow (Slipway)
 
 - **Tasks** live in Beads (`bd`). Start a session with `bd prime`. `bd ready` lists unblocked work; claim with
-  `bd update <id> --claim`; finish with `bd close <id> --reason "…"`. Humans see the board with `slipway ui`.
+  `bd update <id> --claim`. Close code-changing beads after their PR merges, citing it; close decisions, spikes and
+  research on acceptance, and parents after their children. Humans see the board with `slipway ui`.
 - **Behaviour changes** start as an OpenSpec change in `openspec/changes/` (`openspec-propose`, then
   `openspec-apply-change`, then `openspec-archive-change`). Turn an approved change into beads with the
   `spec-to-beads` skill.

@@ -22,4 +22,4 @@
 
 - [ship-flow](skills/ship-flow/SKILL.md), [exec-one-pager](skills/exec-one-pager/SKILL.md),
   [design-doc](skills/design-doc/SKILL.md), [arch-diagram](skills/arch-diagram/SKILL.md),
-  [spec-to-beads](skills/spec-to-beads/SKILL.md)
+  [spec-to-beads](skills/spec-to-beads/SKILL.md), [parallel-pr-delivery](skills/parallel-pr-delivery/SKILL.md)

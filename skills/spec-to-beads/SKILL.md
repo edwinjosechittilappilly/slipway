@@ -14,9 +14,9 @@ OpenSpec decides *what*; Beads tracks *who does what next*. This skill is the br
 2. **Draft the graph. Do not create anything yet.**
    - **Epic:** title from the proposal; description = the proposal's Why and What Changes, plus a link to the design
      doc. Labels `change:<slug>`.
-   - **Tickets:** one per task group in `tasks.md`. If the tasks are horizontal layers (all schema, then all API),
-     re-slice them into tracer bullets: each ticket a thin path through every layer, demoable on its own.
-     Prefactoring comes first.
+   - **Tickets:** one per task in `tasks.md`, with description, acceptance and dependencies. Split large tasks into
+     small dependent children and update `tasks.md` to preserve the 1:1 mapping. Prefer demoable tracer bullets over
+     horizontal layers; prefactoring comes first.
    - **Acceptance:** from the matching spec scenarios (GIVEN / WHEN / THEN), written as a check someone can run.
    - **Labels:** `role:<name>` (`implement` by default; `docs`, `design`, `review` where they fit), `phase:<n>`,
      `change:<slug>`, and `ready-for-agent` when the ticket needs no human context.
@@ -38,8 +38,10 @@ OpenSpec decides *what*; Beads tracks *who does what next*. This skill is the br
    ```
 
 5. **Verify:** `bd graph "$EPIC"`, `bd dep cycles` (must be empty), `bd ready` (shows the first slice).
-6. **Point `tasks.md` at Beads.** Add one line under its title: `Tracked in Beads: epic <id>. Close beads, not
-   checkboxes; tick these when the epic closes.` Keep the file: `openspec archive` reads it.
+6. **Point `tasks.md` at Beads.** Add one line under its title: `Tracked in Beads: epic <id>. Close code-changing
+   beads after their PR merges, citing it; close decisions, spikes and research on acceptance and parents after
+   their children.` Tick tasks as their acceptance is met and, for code changes, their PRs merge. Keep the file:
+   `openspec archive` reads it. At PR time create a review bead and finding children via `parallel-pr-delivery`.
 7. **Report** the epic id, the ready list, and how to watch it: `slipway ui`.
 
 ## Without OpenSpec

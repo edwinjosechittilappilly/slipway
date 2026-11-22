@@ -6,6 +6,7 @@ All notable changes are recorded here. Format: [Keep a Changelog](https://keepac
 
 ### Added
 
+- `parallel-pr-delivery` skill for isolated parallel slices, independent review and protected-branch merge gates.
 - Documentation site (MkDocs Material): home, getting started, daily use, ship flow, commands, plus the existing
   reference pages and ADRs. `make docs` builds it, `make docs-serve` previews it, and the `docs` workflow publishes
   it to <https://edwinjosechittilappilly.github.io/slipway/> on every push to `main`.
@@ -14,6 +15,8 @@ All notable changes are recorded here. Format: [Keep a Changelog](https://keepac
 
 ### Changed
 
+- Global rules and delivery skills track review findings; code-changing beads close after merge, decisions, spikes
+  and research on acceptance.
 - README cut from 226 to about 80 lines; detailed tables moved to the docs site.
 - Docs site uses the full window width and always shows the copy button on code blocks.
 
