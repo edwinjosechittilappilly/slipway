@@ -14,6 +14,8 @@ the map and says which skill, tool and model role fits each stage. Use it when u
 - Make the smallest change that meets the acceptance check. Prefer boring code. Delete what your change makes dead.
 - Write tests that would catch a real regression; use TDD at agreed seams (`tdd` skill).
 - Never commit secrets, push to `main`, force-push a shared branch, or skip hooks.
+- New repos are licensed Apache-2.0: full `LICENSE` text, `license` field in package metadata, README badge and
+  footer, and the docs-site copyright line.
 
 **Before saying done**
 - Run the narrowest check that proves the change. Report the command and what it printed; claim nothing you did not
