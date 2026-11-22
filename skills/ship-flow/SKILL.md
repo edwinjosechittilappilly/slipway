@@ -12,8 +12,8 @@ Skip stages the work is too small to need; never skip a gate.
 
 | Size | Signal | Stages to run |
 |---|---|---|
-| Tiny | Under an hour, one area, no public behaviour change | 6 → 7 → 8 |
-| Small | One session, behaviour is clear | `grill-me` (5 min) → one bead → 6 → 7 → 8 |
+| Tiny | Under an hour, one area, no public behaviour change | 6 → 8 (open) → 7 → 8 (merge) |
+| Small | One session, behaviour is clear | `grill-me` (5 min) → one bead → 6 → 8 (open) → 7 → 8 (merge) |
 | Feature | Several sessions or areas, or a behaviour change others depend on | 1 → 9 |
 | Initiative | Needs budget or buy-in, or spans several features | 2 first, then `wayfinder` for the map, then 1 → 9 per feature |
 
@@ -25,11 +25,11 @@ Skip stages the work is too small to need; never skip a gate.
 | 2 | Decide | `exec-one-pager` | docs | `docs/one-pagers/<slug>.md` | The decision owner said yes |
 | 3 | Design | `design-doc` + `arch-diagram` | plan | `docs/design/<slug>.md`, `docs/diagrams/<slug>-*.{json,svg,drawio}` | Alternatives and risks reviewed by another model |
 | 4 | Spec | `openspec-propose` (or `to-spec` without OpenSpec) | plan | `openspec/changes/<slug>/`, including audit findings | `openspec validate <slug>` passes; human approved before behaviour changes |
-| 5 | Tickets | `spec-to-beads` (or `to-tickets`) | issues | One bead per spec task, plus review beads, with descriptions, acceptance and deps | `bd dep cycles` clean; every plan item is tracked |
+| 5 | Tickets | `spec-to-beads` (or `to-tickets`) | issues | One bead per spec task, with description, acceptance and deps | `bd dep cycles` clean; every plan item tracked |
 | 6 | Build | `bd ready` → claim → `parallel-pr-delivery` + `tdd` | implement | Independent slices in owned worktrees and branches | Each bead's acceptance check passes |
 | 7 | Review | `code-review`, `deslop`; UI: `impeccable` | review (other vendor) | Child finding beads, fixes and independent re-check | All findings addressed or tracked as follow-ups |
 | 8 | Ship | `pr`, `parallel-pr-delivery` | pr | PR per slice; threads answered and resolved | Required CI green, branch current; UI visually reviewed; migrations fully reviewed and re-checked |
-| 9 | Close | `openspec-archive-change`, `bd close`, `retro` | docs | Beads closed after their PR merges; parents after children | PR or commit cited; specs match what shipped |
+| 9 | Close | `openspec-archive-change`, `bd close`, `retro` | docs | Code beads closed after merge; parents after children | PR or commit cited; non-code decisions, spikes and research close on acceptance |
 
 ## 3. Detect the stage
 
@@ -38,7 +38,7 @@ Skip stages the work is too small to need; never skip a gate.
 - Design approved, no `openspec/changes/<slug>/` → stage 4.
 - Change exists, no beads labelled `change:<slug>` (`bd list -l change:<slug>`) → stage 5.
 - `bd ready` returns work → stage 6. Claim before starting: `bd update <id> --claim`.
-- Branch ahead of `main` without a PR → stage 7, then 8.
+- Branch ahead of `main` without a PR → stage 8 (open PR), then stage 7 on the PR.
 - Epic's children all closed → stage 9.
 
 ## 4. Who does the work
@@ -53,8 +53,7 @@ Roles map to harnesses and models in Slipway's manifest; `slipway roles` prints 
 - **In parallel**: use `parallel-pr-delivery`: one claimed bead, worktree and branch per agent; explicit file ownership,
   one integration owner per shared file, and a merge order that minimises conflicts.
 - **Review with a different vendor** than the one that implemented. Same-model review misses the same mistakes.
-- Non-UI PRs may auto-merge after findings are addressed. UI PRs require actual desktop light/dark and 375px screenshot
-  review; migrations require full review and re-check. Update stale branches with `gh pr update-branch --rebase`.
+- Use `parallel-pr-delivery` for UI visual and migration gates, branch updates, and auto-merge policy.
 
 ## 5. Gates that always apply
 

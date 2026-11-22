@@ -34,6 +34,7 @@ You rarely need a skill's name. Each skill has a description, and the agent uses
 | "Design doc for X" | `design-doc` |
 | "Draw the architecture, IBM style" | `arch-diagram` |
 | "Turn this spec into tickets" | `spec-to-beads` / `to-tickets` |
+| "Run these beads in parallel and merge them" | `parallel-pr-delivery` |
 | "Why is this test failing?" | `diagnosing-bugs` |
 | "Review this branch" | `code-review`, `deslop` |
 | "Write the PR" | `pr` |

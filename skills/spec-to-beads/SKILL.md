@@ -22,8 +22,6 @@ OpenSpec decides *what*; Beads tracks *who does what next*. This skill is the br
      `change:<slug>`, and `ready-for-agent` when the ticket needs no human context.
    - **Dependencies:** real ones only (data, API, migration order). Work that can run in parallel stays unblocked.
    - **Open questions** from the proposal or design become `-t decision` beads that block the tickets they affect.
-   - **Review:** create a review bead per PR and a child bead for each finding, recording severity, file:line, fix,
-     acceptance and dependencies. Track any deferred finding as a follow-up bead.
 3. **Show** the graph as a table (title, blocked by, role, acceptance) and get the user's approval.
 4. **Create**, epic first, capturing ids with `--silent`:
 
@@ -40,9 +38,10 @@ OpenSpec decides *what*; Beads tracks *who does what next*. This skill is the br
    ```
 
 5. **Verify:** `bd graph "$EPIC"`, `bd dep cycles` (must be empty), `bd ready` (shows the first slice).
-6. **Point `tasks.md` at Beads.** Add one line under its title: `Tracked in Beads: epic <id>. Close each bead only
-   after its PR merges, citing the PR or commit; close the epic after its children.` Tick tasks as their PRs merge.
-   Keep the file: `openspec archive` reads it.
+6. **Point `tasks.md` at Beads.** Add one line under its title: `Tracked in Beads: epic <id>. Close code-changing
+   beads after their PR merges, citing it; close decisions, spikes and research on acceptance and parents after
+   their children.` Tick tasks as their acceptance is met and, for code changes, their PRs merge. Keep the file:
+   `openspec archive` reads it. At PR time create a review bead and finding children via `parallel-pr-delivery`.
 7. **Report** the epic id, the ready list, and how to watch it: `slipway ui`.
 
 ## Without OpenSpec

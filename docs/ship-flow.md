@@ -18,7 +18,7 @@ flowchart TB
   end
   subgraph deliver [Deliver it]
     direction LR
-    X[6 Build<br/>implement + tdd] --> V[7 Review<br/>another vendor] --> P[8 Ship<br/>pr] --> C[9 Close<br/>archive + retro]
+    X[6 Build<br/>implement + tdd] --> P[8 Open PR<br/>pr] --> V[7 Review<br/>another vendor] --> M[8 Merge] --> C[9 Close<br/>archive + retro]
   end
   decide --> plan --> deliver
 ```
@@ -29,8 +29,8 @@ Small changes skip the paperwork. Gates are never skipped.
 
 | Size | Looks like | Stages |
 |---|---|---|
-| Tiny | Under an hour, one area, nothing public changes | Build → review → ship |
-| Small | One session, behaviour is clear | Quick `grill-me` → one bead → build → review → ship |
+| Tiny | Under an hour, one area, nothing public changes | Build → open PR → review → merge |
+| Small | One session, behaviour is clear | Quick `grill-me` → one bead → build → open PR → review → merge |
 | Feature | Several sessions or areas, or behaviour others depend on | All nine |
 | Initiative | Needs budget or buy-in, or spans features | One-pager first, then `wayfinder` to map it, then each feature |
 
@@ -43,10 +43,10 @@ Small changes skip the paperwork. Gates are never skipped.
 | 3 | Design | `design-doc` + `arch-diagram` | plan | `docs/design/<slug>.md`, diagrams | Reviewed by another vendor's model |
 | 4 | Spec | `openspec-propose` | plan | `openspec/changes/<slug>/`, including audits | `openspec validate` passes; you approved |
 | 5 | Tickets | `spec-to-beads` | issues | One bead per spec task, with descriptions, deps and acceptance | `bd dep cycles` clean |
-| 6 | Build | `bd ready` → claim → `parallel-pr-delivery` | implement | Owned worktrees and branches per independent bead | Acceptance checks pass |
+| 6 | Build | `bd ready` → claim → `parallel-pr-delivery` + `tdd` | implement | Owned worktrees and branches per independent bead | Acceptance checks pass |
 | 7 | Review | `code-review`, `deslop`; UI: `impeccable` | review, different vendor | Finding beads, fixes and re-check | Findings addressed or tracked as follow-ups |
 | 8 | Ship | `pr`, `parallel-pr-delivery` | pr | PR per slice, review threads resolved | Required CI passes, branch current, UI visual and migration gates met |
-| 9 | Close | `openspec-archive-change`, `bd close`, `retro` | docs | Beads closed after merge, parents after children | PR or commit cited; specs match |
+| 9 | Close | `openspec-archive-change`, `bd close`, `retro` | docs | Code beads close after merge; parents after children | PR or commit cited; decisions, spikes and research close on acceptance |
 
 ## How it finds your stage
 
@@ -57,7 +57,7 @@ Small changes skip the paperwork. Gates are never skipped.
 | Design approved, no `openspec/changes/<slug>/` | 4 |
 | Change exists, no beads labelled `change:<slug>` | 5 |
 | `bd ready` returns work | 6 |
-| Branch ahead of `main` without a PR | 7, then 8 |
+| Branch ahead of `main` without a PR | 8 (open PR), then 7 on the PR |
 | All the epic's beads closed | 9 |
 
 ## Who does each stage
@@ -72,8 +72,7 @@ Each stage has a role. Roles map to an agent and a model ([harnesses and routing
   ownership, one integration owner per shared file, and a merge order that minimises conflicts.
 
 Review always runs on a different vendor's model than the one that wrote the code.
-UI PRs need actual desktop light/dark and 375px screenshot review; data migrations need full review and re-check.
-Non-UI PRs may auto-merge after findings are addressed. Close beads only after their PR merges.
+`parallel-pr-delivery` defines the UI visual, migration, CI and auto-merge gates.
 
 ## Rules at every stage
 
