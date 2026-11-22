@@ -250,7 +250,7 @@ pack = "routing"
 kind = "link"
 dir = "skills"
 targets = ["agents-skills", "claude-skills"]
-why = "ship-flow, exec-one-pager, design-doc, arch-diagram, spec-to-beads: symlinked, so git pull updates them."
+why = "Delivery, planning, diagram and Beads skills are symlinked, so git pull updates them."
 
 [[component]]
 id = "global-rules"

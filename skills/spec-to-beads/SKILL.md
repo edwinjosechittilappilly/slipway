@@ -14,14 +14,16 @@ OpenSpec decides *what*; Beads tracks *who does what next*. This skill is the br
 2. **Draft the graph. Do not create anything yet.**
    - **Epic:** title from the proposal; description = the proposal's Why and What Changes, plus a link to the design
      doc. Labels `change:<slug>`.
-   - **Tickets:** one per task group in `tasks.md`. If the tasks are horizontal layers (all schema, then all API),
-     re-slice them into tracer bullets: each ticket a thin path through every layer, demoable on its own.
-     Prefactoring comes first.
+   - **Tickets:** one per task in `tasks.md`, with description, acceptance and dependencies. Split large tasks into
+     small dependent children and update `tasks.md` to preserve the 1:1 mapping. Prefer demoable tracer bullets over
+     horizontal layers; prefactoring comes first.
    - **Acceptance:** from the matching spec scenarios (GIVEN / WHEN / THEN), written as a check someone can run.
    - **Labels:** `role:<name>` (`implement` by default; `docs`, `design`, `review` where they fit), `phase:<n>`,
      `change:<slug>`, and `ready-for-agent` when the ticket needs no human context.
    - **Dependencies:** real ones only (data, API, migration order). Work that can run in parallel stays unblocked.
    - **Open questions** from the proposal or design become `-t decision` beads that block the tickets they affect.
+   - **Review:** create a review bead per PR and a child bead for each finding, recording severity, file:line, fix,
+     acceptance and dependencies. Track any deferred finding as a follow-up bead.
 3. **Show** the graph as a table (title, blocked by, role, acceptance) and get the user's approval.
 4. **Create**, epic first, capturing ids with `--silent`:
 
@@ -38,8 +40,9 @@ OpenSpec decides *what*; Beads tracks *who does what next*. This skill is the br
    ```
 
 5. **Verify:** `bd graph "$EPIC"`, `bd dep cycles` (must be empty), `bd ready` (shows the first slice).
-6. **Point `tasks.md` at Beads.** Add one line under its title: `Tracked in Beads: epic <id>. Close beads, not
-   checkboxes; tick these when the epic closes.` Keep the file: `openspec archive` reads it.
+6. **Point `tasks.md` at Beads.** Add one line under its title: `Tracked in Beads: epic <id>. Close each bead only
+   after its PR merges, citing the PR or commit; close the epic after its children.` Tick tasks as their PRs merge.
+   Keep the file: `openspec archive` reads it.
 7. **Report** the epic id, the ready list, and how to watch it: `slipway ui`.
 
 ## Without OpenSpec

@@ -41,12 +41,12 @@ Small changes skip the paperwork. Gates are never skipped.
 | 1 | Clarify | `grill-with-docs` | plan | Terms in `GLOSSARY.md`, ADRs in `docs/adr/` | Goal and acceptance check fit in one line each |
 | 2 | Decide | `exec-one-pager` | docs | `docs/one-pagers/<slug>.md` | The decision owner said yes |
 | 3 | Design | `design-doc` + `arch-diagram` | plan | `docs/design/<slug>.md`, diagrams | Reviewed by another vendor's model |
-| 4 | Spec | `openspec-propose` | plan | `openspec/changes/<slug>/` | `openspec validate` passes; you approved |
-| 5 | Tickets | `spec-to-beads` | issues | Epic + beads with deps, acceptance, `role:` labels | `bd dep cycles` clean |
-| 6 | Build | `bd ready` → `implement` + `tdd` | implement | Commits on a feature branch | The bead's acceptance check passes |
-| 7 | Review | `code-review`, `deslop`; UI: `impeccable` | review | Findings fixed | No blockers |
-| 8 | Ship | `pr`, `gh pr create` | pr | PR naming its beads and change | CI green |
-| 9 | Close | `openspec-archive-change`, `bd close`, `retro` | docs | Archived change, closed epic | Specs match what shipped |
+| 4 | Spec | `openspec-propose` | plan | `openspec/changes/<slug>/`, including audits | `openspec validate` passes; you approved |
+| 5 | Tickets | `spec-to-beads` | issues | One bead per spec task, with descriptions, deps and acceptance | `bd dep cycles` clean |
+| 6 | Build | `bd ready` → claim → `parallel-pr-delivery` | implement | Owned worktrees and branches per independent bead | Acceptance checks pass |
+| 7 | Review | `code-review`, `deslop`; UI: `impeccable` | review, different vendor | Finding beads, fixes and re-check | Findings addressed or tracked as follow-ups |
+| 8 | Ship | `pr`, `parallel-pr-delivery` | pr | PR per slice, review threads resolved | Required CI passes, branch current, UI visual and migration gates met |
+| 9 | Close | `openspec-archive-change`, `bd close`, `retro` | docs | Beads closed after merge, parents after children | PR or commit cited; specs match |
 
 ## How it finds your stage
 
@@ -68,10 +68,12 @@ Each stage has a role. Roles map to an agent and a model ([harnesses and routing
   reviews, `issue-writer` creates beads, `pr-author` writes the PR, `drafter` writes docs.
 - **Inside Claude Code**, the subagents are `explorer`, `planner`, `cross-reviewer` and `issue-writer`.
 - **Across agents**, label a bead `role:<name>` and run `slipway run --bead <id>`.
-- **In parallel**, one git worktree per bead (`bd worktree create`). Claiming is atomic, so two agents never take the
-  same bead.
+- **In parallel**, use `parallel-pr-delivery`: one claimed bead, branch and worktree per agent, explicit file
+  ownership, one integration owner per shared file, and a merge order that minimises conflicts.
 
 Review always runs on a different vendor's model than the one that wrote the code.
+UI PRs need actual desktop light/dark and 375px screenshot review; data migrations need full review and re-check.
+Non-UI PRs may auto-merge after findings are addressed. Close beads only after their PR merges.
 
 ## Rules at every stage
 

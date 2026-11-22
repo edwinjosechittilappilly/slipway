@@ -24,12 +24,12 @@ Skip stages the work is too small to need; never skip a gate.
 | 1 | Clarify | `grill-with-docs` (`grill-me` outside a repo) | plan | Terms in `GLOSSARY.md`, ADRs in `docs/adr/` | Goal and acceptance check fit in one line each |
 | 2 | Decide | `exec-one-pager` | docs | `docs/one-pagers/<slug>.md` | The decision owner said yes |
 | 3 | Design | `design-doc` + `arch-diagram` | plan | `docs/design/<slug>.md`, `docs/diagrams/<slug>-*.{json,svg,drawio}` | Alternatives and risks reviewed by another model |
-| 4 | Spec | `openspec-propose` (or `to-spec` without OpenSpec) | plan | `openspec/changes/<slug>/` | `openspec validate <slug>` passes; human approved |
-| 5 | Tickets | `spec-to-beads` (or `to-tickets`) | issues | Epic + child beads with deps, acceptance, `role:` labels | `bd dep cycles` clean; every ticket has an acceptance check |
-| 6 | Build | `bd ready` → `implement` + `tdd` | implement | Commits on a feature branch | The ticket's acceptance check passes |
-| 7 | Review | `code-review`, `deslop`; UI: `impeccable` audit | review (other vendor) | Findings fixed | No blockers left |
-| 8 | Ship | `pr` skill, `gh pr create` | pr | PR naming its beads and OpenSpec change | CI green |
-| 9 | Close | tick `tasks.md`, `openspec-archive-change`, `bd close`, `retro` | docs | Archived change, closed epic, retro notes | Specs in `openspec/specs/` match what shipped |
+| 4 | Spec | `openspec-propose` (or `to-spec` without OpenSpec) | plan | `openspec/changes/<slug>/`, including audit findings | `openspec validate <slug>` passes; human approved before behaviour changes |
+| 5 | Tickets | `spec-to-beads` (or `to-tickets`) | issues | One bead per spec task, plus review beads, with descriptions, acceptance and deps | `bd dep cycles` clean; every plan item is tracked |
+| 6 | Build | `bd ready` → claim → `parallel-pr-delivery` + `tdd` | implement | Independent slices in owned worktrees and branches | Each bead's acceptance check passes |
+| 7 | Review | `code-review`, `deslop`; UI: `impeccable` | review (other vendor) | Child finding beads, fixes and independent re-check | All findings addressed or tracked as follow-ups |
+| 8 | Ship | `pr`, `parallel-pr-delivery` | pr | PR per slice; threads answered and resolved | Required CI green, branch current; UI visually reviewed; migrations fully reviewed and re-checked |
+| 9 | Close | `openspec-archive-change`, `bd close`, `retro` | docs | Beads closed after their PR merges; parents after children | PR or commit cited; specs match what shipped |
 
 ## 3. Detect the stage
 
@@ -50,9 +50,11 @@ Roles map to harnesses and models in Slipway's manifest; `slipway roles` prints 
 - **Inside Claude Code**: subagents `explorer`, `planner`, `cross-reviewer`, `issue-writer`.
 - **Across harnesses**: label beads `role:<name>` and run `slipway run --bead <id>`; for ad-hoc work,
   `slipway run <role> "<prompt>"`.
-- **In parallel**: one worktree per bead (`bd worktree create <name>`), one agent per bead. `--claim` is atomic, so two
-  agents cannot take the same bead.
+- **In parallel**: use `parallel-pr-delivery`: one claimed bead, worktree and branch per agent; explicit file ownership,
+  one integration owner per shared file, and a merge order that minimises conflicts.
 - **Review with a different vendor** than the one that implemented. Same-model review misses the same mistakes.
+- Non-UI PRs may auto-merge after findings are addressed. UI PRs require actual desktop light/dark and 375px screenshot
+  review; migrations require full review and re-check. Update stale branches with `gh pr update-branch --rebase`.
 
 ## 5. Gates that always apply
 
