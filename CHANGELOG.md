@@ -19,6 +19,7 @@ All notable changes are recorded here. Format: [Keep a Changelog](https://keepac
   and research on acceptance.
 - README cut from 226 to about 80 lines; detailed tables moved to the docs site.
 - Docs site uses the full window width and always shows the copy button on code blocks.
+- Install docs drop the private-repo `gh api` workaround; the repository is public.
 
 ## [0.1.0] - 2026-11-20
 

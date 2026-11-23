@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   check:
-    # macOS minutes cost 10x on private repos: PRs run on Ubuntu, pushes to main also run on macOS.
+    # PRs run on Ubuntu for fast feedback; pushes to main also run on macOS.
     strategy:
       fail-fast: false
       matrix:

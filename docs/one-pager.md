@@ -36,8 +36,8 @@ It does not replace Homebrew, npm or the skills CLI; it calls them. Agent fleets
 ## Cost and timeline
 
 Built in one session. Running cost: about 15 minutes a week to review the upstream-watch PR. Milestones: M1 private
-use on the author's machines (now); M2 public release with a demo recording after two weeks of daily use; M3 a second
-profile from another user.
+use on the author's machines (done); M2 public release with a demo recording (now); M3 a second profile from another
+user.
 
 ## Options
 

@@ -9,14 +9,6 @@ curl -fsSL https://raw.githubusercontent.com/edwinjosechittilappilly/slipway/mai
 This changes nothing. It says what the bootstrap would install, clones Slipway to a temporary folder, and lists every
 component and command `slipway install` would run.
 
-!!! note "Private repo"
-    While the repository is private, fetch the script with your `gh` login instead of `curl`:
-
-    ```bash
-    gh api repos/edwinjosechittilappilly/slipway/contents/install.sh \
-      -H "Accept: application/vnd.github.raw" | bash -s -- --dry-run
-    ```
-
 ## 2. Install
 
 ```bash
