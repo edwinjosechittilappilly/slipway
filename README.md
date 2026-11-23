@@ -23,9 +23,6 @@ curl -fsSL https://raw.githubusercontent.com/edwinjosechittilappilly/slipway/mai
 curl -fsSL https://raw.githubusercontent.com/edwinjosechittilappilly/slipway/main/install.sh | bash
 ```
 
-While the repo is private, swap `curl -fsSL <url>` for
-`gh api repos/edwinjosechittilappilly/slipway/contents/install.sh -H "Accept: application/vnd.github.raw"`.
-
 ## A day with Slipway
 
 The `slipway` command runs in your terminal. Your work happens inside the agent, where the skills already are.
