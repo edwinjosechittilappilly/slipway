@@ -1,7 +1,6 @@
 name: docs
 
 # Builds the MkDocs site on every PR and push, and deploys pushes to main to GitHub Pages.
-# The Pages site is public even while the repository is private.
 
 on:
   pull_request:

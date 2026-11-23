@@ -18,8 +18,7 @@ installed by hand, upgraded by hand (or never), and drifts. Upstream skill packs
 
 Slipway is a git repository plus a small CLI that owns this environment as code:
 
-- **One command** sets up a machine: `curl … | bash` (public) or `gh api …/install.sh | bash` (private, uses your
-  `gh` login).
+- **One command** sets up a machine: `curl … | bash`.
 - **One manifest** (`slipway.toml`) declares every tool, skill pack, plugin, harness, model role and agent.
 - **One lockfile** (`slipway.lock.json`) pins upstream skill sources to commits, so skill updates arrive as
   reviewable pull requests instead of silent changes to the prompts your agents run.

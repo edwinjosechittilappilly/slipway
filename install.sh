@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 # Slipway bootstrap: prerequisites, the `slipway` CLI, then `slipway install`.
 #
-#   Public repo:
+#   Install:
 #     curl -fsSL https://raw.githubusercontent.com/edwinjosechittilappilly/slipway/main/install.sh | bash
-#   Private repo (uses your gh login):
-#     gh api repos/edwinjosechittilappilly/slipway/contents/install.sh -H "Accept: application/vnd.github.raw" | bash
 #   Pass flags after `bash -s --`, e.g. preview first:
 #     ... | bash -s -- --dry-run
 #   From a clone:
@@ -109,7 +107,7 @@ clone() {
     gh repo clone "$REPO" "$dest" -- --quiet --depth 1
   else
     git clone --quiet --depth 1 "https://github.com/$REPO.git" "$dest" ||
-      die "clone failed. For a private repo run 'gh auth login' first."
+      die "clone failed: check network access to github.com."
   fi
 }
 
